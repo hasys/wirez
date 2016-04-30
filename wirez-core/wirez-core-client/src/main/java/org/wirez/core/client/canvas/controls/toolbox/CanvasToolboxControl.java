@@ -111,7 +111,7 @@ public class CanvasToolboxControl extends AbstractCanvasHandlerRegistrationContr
                 final ButtonsOrRegister register = Toolboxes.hoverToolBoxFor(wiresShape)
                         .on(Direction.SOUTH_EAST)
                         .towards(Direction.EAST)
-                        .grid(2, 2);
+                        .grid(commands.size(), 1);
 
                 for (final ToolboxCommand command : commands) {
 

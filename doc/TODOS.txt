@@ -148,6 +148,7 @@ Performance
 House keeping & others
 **********************
     
+    - recompiling canvas controls forces to restart server always? ( csadilek )
     - Unit testing
     - Distros
         - remove beans.xml exclusion for org.wirez.client... should not be there. 

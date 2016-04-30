@@ -106,8 +106,8 @@ public class HoverToolbox implements GridToolbox {
     }
     
     private void reposition() {
-        final double gx = shape.getGroup().getX();
-        final double gy = shape.getGroup().getY();
+        final double gx = shape.getGroup().getAbsoluteLocation().getX();
+        final double gy = shape.getGroup().getAbsoluteLocation().getY();
         final Point2D anchorPoint = Positioning.anchorFor(this.shape.getPath().getBoundingPoints().getBoundingBox(), this.anchor);
         final Grid.Point toolboxPosition = this.grid.findPosition(new Grid.Point((int) anchorPoint.getX(), (int) anchorPoint.getY()), this.towards);
         group.setX(gx + toolboxPosition.getX());
