@@ -16,8 +16,6 @@
 
 package org.wirez.core.client.canvas.controls.toolbox;
 
-import com.ait.lienzo.client.core.event.NodeMouseClickEvent;
-import com.ait.lienzo.client.core.event.NodeMouseClickHandler;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.ait.lienzo.shared.core.types.Direction;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -31,9 +29,9 @@ import org.wirez.core.client.canvas.controls.toolbox.command.Context;
 import org.wirez.core.client.canvas.controls.toolbox.command.ContextImpl;
 import org.wirez.core.client.canvas.controls.toolbox.command.ToolboxCommand;
 import org.wirez.core.client.shape.Shape;
-import org.wirez.lienzo.toolbox.ButtonsOrRegister;
 import org.wirez.lienzo.toolbox.HoverToolbox;
-import org.wirez.lienzo.toolbox.HoverToolboxButton;
+import org.wirez.lienzo.toolbox.Toolboxes;
+import org.wirez.lienzo.toolbox.builder.ButtonsOrRegister;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -108,30 +106,31 @@ public class CanvasToolboxControl extends AbstractCanvasHandlerRegistrationContr
             
             if ( null != commands && !commands.isEmpty() ) {
                 
-                WiresShape wiresShape = (WiresShape) shape.getShapeView();
+                final WiresShape wiresShape = (WiresShape) shape.getShapeView();
 
-                ButtonsOrRegister toolboxBuilder = HoverToolbox.toolboxFor(wiresShape).on(Direction.NORTH_EAST)
-                        .towards(Direction.SOUTH);
+                final ButtonsOrRegister register = Toolboxes.hoverToolBoxFor(wiresShape)
+                        .on(Direction.SOUTH_EAST)
+                        .towards(Direction.EAST)
+                        .grid(2, 2);
 
                 for (final ToolboxCommand command : commands) {
 
                     // TODO: Use command title (tooltip).
 
-                    toolboxBuilder.add(new HoverToolboxButton(command.getIcon().copy(), new NodeMouseClickHandler() {
-                        @Override
-                        public void onNodeMouseClick(final NodeMouseClickEvent nodeMouseClickEvent) {
-                            Context _context = new ContextImpl(canvasHandler,
-                                    nodeMouseClickEvent.getX(),
-                                    nodeMouseClickEvent.getY());
-                            setCommandView(command).execute(_context, element);
-                        }
-                    }));
+                    register.add(command.getIcon())
+                            .setClickHandler(event -> {
+                                Context _context = new ContextImpl(canvasHandler,
+                                        event.getX(),
+                                        event.getY());
+                                setCommandView(command).execute(_context, element);
+                            })
+                            .end();
 
                 }
 
-
-                final HoverToolbox hoverToolbox = toolboxBuilder.register();
+                final HoverToolbox hoverToolbox = register.register();
                 toolboxMap.put( element.getUUID(), hoverToolbox );
+                  
             }
             
         }
