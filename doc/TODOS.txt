@@ -24,12 +24,15 @@
             - Resize -> http://screencast.com/t/TjRkYpMvt
             - Align -> http://screencast.com/t/62lCjZGYDq7i
         - Events
+            - More events and provide the natives...
             - Drag event -> cannot get the DragContext
             - In general -> return the handler registration as well in order to remove handlers when no necessary.
 
     - Shape order ( flows, parent/child nodes, etc )
-    - review wires containment. Eg: lanes -> if dragging lane title inside the lane, the lane gets removed from the parent diagram and then it sometimes gets on top and nothing can be moved inside it.
-
+    - review wires containment. 
+        - Eg: lanes -> if dragging lane title inside the lane, the lane gets removed from the parent diagram and then it sometimes gets on top and nothing can be moved inside it.
+        - dragging children shapes crashed with docking... ( toolbox )
+        
     - Wires refactors
         - Exctract logics for containment & connection ( highlight parents, show magnets, etc) from drag event handlers
         
