@@ -19,10 +19,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Dependent
-public class AddConnectionCommandView implements AddConnectionCommand.View {
+public class NewConnectorCommandView implements NewConnectorCommand.View {
 
     private static Logger LOGGER = Logger.getLogger("org.wirez.core.client.control.toolbox.command.AddConnectionCommandView");
-    private AddConnectionCommand presenter;
+    private NewConnectorCommand presenter;
 
     private Canvas canvas;
     private IPrimitive<?> connector;
@@ -31,20 +31,20 @@ public class AddConnectionCommandView implements AddConnectionCommand.View {
     private MouseClickHandler mouseClickHandler;
 
     @Override
-    public AddConnectionCommand.View init(final AddConnectionCommand presenter) {
+    public NewConnectorCommand.View init(final NewConnectorCommand presenter) {
         this.presenter = presenter;
         return this;
     }
 
     @Override
-    public AddConnectionCommand.View show(final Canvas canvas, final double x, final double y) {
+    public NewConnectorCommand.View show(final Canvas canvas, final double x, final double y) {
         this.canvas = canvas;
         doShow(x, y);
         return this;
     }
 
     @Override
-    public AddConnectionCommand.View highlight(final Canvas canvas, final Shape shape) {
+    public NewConnectorCommand.View highlight(final Canvas canvas, final Shape shape) {
         new ShapeSelectionAnimation(shape)
                 .setCanvas(canvas)
                 .setDuration(200)
@@ -53,7 +53,7 @@ public class AddConnectionCommandView implements AddConnectionCommand.View {
     }
 
     @Override
-    public AddConnectionCommand.View unhighlight(final Canvas canvas, final Shape shape) {
+    public NewConnectorCommand.View unhighlight(final Canvas canvas, final Shape shape) {
         new ShapeDeSelectionAnimation(shape, 0, 0, ColorName.BLACK)
                 .setCanvas(canvas)
                 .setDuration(200)
@@ -64,7 +64,7 @@ public class AddConnectionCommandView implements AddConnectionCommand.View {
 
 
     @Override
-    public AddConnectionCommand.View clear() {
+    public NewConnectorCommand.View clear() {
         final LienzoLayer layer = (LienzoLayer) canvas.getLayer();
         if ( null != this.mouseClickHandler ) {
             layer.removeHandler(this.mouseClickHandler);

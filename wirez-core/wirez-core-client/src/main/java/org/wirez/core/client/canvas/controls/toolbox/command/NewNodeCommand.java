@@ -24,13 +24,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Dependent
-public class AddNodeCommand implements ToolboxCommand{
+public class NewNodeCommand implements ToolboxCommand{
 
-    private static Logger LOGGER = Logger.getLogger(AddNodeCommand.class.getName());
+    private static Logger LOGGER = Logger.getLogger(NewNodeCommand.class.getName());
     
     public interface View {
 
-        View init(AddNodeCommand presenter);
+        View init(NewNodeCommand presenter);
 
         View showPalette(org.wirez.core.client.shape.Shape shape, int x, int y, ShapeGlyph... glyphs);
 
@@ -45,7 +45,7 @@ public class AddNodeCommand implements ToolboxCommand{
     View view;
 
     @Inject
-    public AddNodeCommand(final CommonLookups commonLookups,
+    public NewNodeCommand(final CommonLookups commonLookups,
                           final ShapeManager shapeManager,
                           final View view) {
         this.commonLookups = commonLookups;

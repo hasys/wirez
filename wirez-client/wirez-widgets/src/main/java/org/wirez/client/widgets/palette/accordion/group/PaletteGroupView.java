@@ -102,7 +102,7 @@ public class PaletteGroupView extends Composite implements PaletteGroup.View {
                                       final PaletteGroup.GlyphViewCallback callback) {
         assert lienzoPanel != null;
 
-        final Decorator decorator = new Decorator(new Decorator.Callback() {
+        final Decorator decorator = new Decorator(new Decorator.ItemCallback() {
             @Override
             public void onShow(double absX, double absY) {
                 callback.onFocus(absX, absY);

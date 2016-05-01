@@ -5,25 +5,26 @@ import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.view.ShapeGlyph;
+import org.wirez.lienzo.palette.HoverMiniPalette;
 import org.wirez.lienzo.palette.MiniPalette;
 
 import javax.enterprise.context.Dependent;
 
 @Dependent
-public class AddNodeCommandView implements AddNodeCommand.View{
+public class NewNodeCommandView implements NewNodeCommand.View{
 
-    private AddNodeCommand presenter ;
-    private final MiniPalette miniPallete = new MiniPalette();
+    private NewNodeCommand presenter ;
+    private final HoverMiniPalette miniPallete = new HoverMiniPalette();
     
     @Override
-    public AddNodeCommand.View init(final AddNodeCommand presenter) {
+    public NewNodeCommand.View init(final NewNodeCommand presenter) {
         this.presenter = presenter;
         return this;
     }
 
     @Override
-    public AddNodeCommand.View showPalette(final Shape shape, 
-                                           final int x, 
+    public NewNodeCommand.View showPalette(final Shape shape,
+                                           final int x,
                                            final int y,
                                            final ShapeGlyph... glyphs) {
         final WiresShape wiresShape = (WiresShape) shape.getShapeView();
@@ -32,7 +33,7 @@ public class AddNodeCommandView implements AddNodeCommand.View{
     }
 
     @Override
-    public AddNodeCommand.View clear() {
+    public NewNodeCommand.View clear() {
         removeMiniPalette();
         return this;
     }
@@ -51,13 +52,39 @@ public class AddNodeCommandView implements AddNodeCommand.View{
 
             shape.getWiresLayer().getLayer().add( miniPallete );
 
-            miniPallete.setPadding(10)
+            miniPallete
+                    .setPadding(10)
                     .setIconSize(16)
                     .setX(x)
                     .setY(y)
+                    .setCloseCallback(new HoverMiniPalette.CloseCallback() {
+                        @Override
+                        public void onClose() {
+                            removeMiniPalette();
+                        }
+                    })
+                    .setItemCallback(new MiniPalette.Callback() {
+                        @Override
+                        public void onItemHover(final int index,
+                                                final double x,
+                                                final double y) {
+
+                            // TODO: Show tooltips
+
+                        }
+
+                        @Override
+                        public void onItemOut(final int index) {
+
+                            // TODO: Hide tooltips
+
+                        }
+                    })
                     .build( items )
                     .setAlpha(0)
-                    .animate(AnimationTweener.LINEAR, AnimationProperties.toPropertyList(AnimationProperty.Properties.ALPHA(1)), 500, new AnimationCallback());
+                    .animate(AnimationTweener.LINEAR, 
+                            AnimationProperties.toPropertyList(AnimationProperty.Properties.ALPHA(1)), 
+                            500, new AnimationCallback());
         
         } else {
             
@@ -70,12 +97,15 @@ public class AddNodeCommandView implements AddNodeCommand.View{
     
     private void removeMiniPalette() {
         
-        miniPallete.animate(AnimationTweener.LINEAR, AnimationProperties.toPropertyList(AnimationProperty.Properties.ALPHA(1)), 500, new AnimationCallback() {
+        miniPallete.animate(AnimationTweener.LINEAR, AnimationProperties.toPropertyList(AnimationProperty.Properties.ALPHA(1)), 
+                500, new AnimationCallback() {
+                    
             @Override
             public void onClose(IAnimation animation, IAnimationHandle handle) {
                 super.onClose(animation, handle);
                 miniPallete.clear();
             }
+                    
         });
         
     }

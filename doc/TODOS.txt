@@ -46,6 +46,7 @@
         - Help widgets & tooltips/popovers
         - Error handling
         - refactor use of CDI qualifiers ( managers & services ) -> CDI @Priority 
+        - Show/Hide grid toolbar button
         
     - Usability
         - dragging constrained just for diagram bounds?

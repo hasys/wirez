@@ -21,7 +21,7 @@ import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.command.CanvasCommandManager;
 import org.wirez.core.client.canvas.command.CanvasViolation;
 import org.wirez.core.client.canvas.command.factory.CanvasCommandFactory;
-import org.wirez.core.client.canvas.controls.toolbox.command.AddConnectionCommand;
+import org.wirez.core.client.canvas.controls.toolbox.command.NewConnectorCommand;
 import org.wirez.core.client.canvas.controls.toolbox.command.Context;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.service.ClientRuntimeError;
@@ -38,7 +38,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Dependent
-public class SequenceFlowCommandCallback implements AddConnectionCommand.Callback {
+public class SequenceFlowCommandCallback implements NewConnectorCommand.Callback {
 
     private static Logger LOGGER = Logger.getLogger(SequenceFlowCommandCallback.class.getName());
 

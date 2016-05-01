@@ -124,6 +124,12 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.wirez</groupId>
+      <artifactId>wirez-lienzo-extensions</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
   </dependencies>
 
 </project>

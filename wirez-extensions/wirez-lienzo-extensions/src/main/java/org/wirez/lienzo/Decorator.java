@@ -25,7 +25,7 @@ import com.google.gwt.user.client.Timer;
 
 public class Decorator extends Group {
 
-    public interface Callback {
+    public interface ItemCallback {
 
         void onShow(double x, double y);
 
@@ -37,9 +37,9 @@ public class Decorator extends Group {
     private static final double ANIMATION_DURATION = 500;
     private double padding = 5;
     Rectangle decorator;
-    Callback callback;
+    ItemCallback callback;
 
-    public Decorator(final Callback callback) {
+    public Decorator(final ItemCallback callback) {
         this.callback = callback;
     }
 
@@ -55,7 +55,7 @@ public class Decorator extends Group {
         return this;
     }
 
-    public Decorator setCallback(final Callback callback) {
+    public Decorator setItemCallback(final ItemCallback callback) {
         this.callback = callback;
         return this;
     }

@@ -21,7 +21,7 @@ import javax.inject.Inject;
 import java.util.Set;
 
 @Dependent
-public class AddConnectionCommand implements ToolboxCommand {
+public class NewConnectorCommand implements ToolboxCommand {
 
     private final com.ait.lienzo.client.core.shape.Shape<?> icon;
     
@@ -37,7 +37,7 @@ public class AddConnectionCommand implements ToolboxCommand {
     
     public interface View {
         
-        View init(AddConnectionCommand presenter);
+        View init(NewConnectorCommand presenter);
         
         View show(Canvas canvas, double x, double y);
 
@@ -53,8 +53,8 @@ public class AddConnectionCommand implements ToolboxCommand {
     View view;
 
     @Inject
-    public AddConnectionCommand(final CommonLookups commonLookups,
-                                final View view) {
+    public NewConnectorCommand(final CommonLookups commonLookups,
+                               final View view) {
         this.commonLookups = commonLookups;
         this.view = view;
         this.icon = SVGUtils.createSVGIcon(SVGUtils.getCreateConnection());
@@ -82,7 +82,7 @@ public class AddConnectionCommand implements ToolboxCommand {
         return "Create a new connector";
     }
 
-    public AddConnectionCommand setCallback(final Callback callback) {
+    public NewConnectorCommand setCallback(final Callback callback) {
         this.callback = callback;
         return this;
     }

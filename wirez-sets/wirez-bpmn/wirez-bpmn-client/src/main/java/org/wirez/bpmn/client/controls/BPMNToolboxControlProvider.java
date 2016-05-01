@@ -23,8 +23,8 @@ public class BPMNToolboxControlProvider extends AbstractToolboxControlProvider<B
                                       final RemoveToolboxCommand removeToolboxCommand, 
                                       final MoveUpCommand moveUpCommand, 
                                       final MoveDownCommand moveDownCommand, 
-                                      final AddConnectionCommand addConnectionCommand,
-                                      final AddNodeCommand addNodeCommand,
+                                      final NewConnectorCommand addConnectionCommand,
+                                      final NewNodeCommand addNodeCommand,
                                       final SequenceFlowCommandCallback sequenceFlowCommandCallback) {
         super(nameToolboxCommand, removeToolboxCommand, moveUpCommand, moveDownCommand, addConnectionCommand, addNodeCommand);
         this.sequenceFlowCommandCallback = sequenceFlowCommandCallback;
