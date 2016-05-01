@@ -24,8 +24,9 @@ public class BPMNToolboxControlProvider extends AbstractToolboxControlProvider<B
                                       final MoveUpCommand moveUpCommand, 
                                       final MoveDownCommand moveDownCommand, 
                                       final AddConnectionCommand addConnectionCommand,
+                                      final AddNodeCommand addNodeCommand,
                                       final SequenceFlowCommandCallback sequenceFlowCommandCallback) {
-        super(nameToolboxCommand, removeToolboxCommand, moveUpCommand, moveDownCommand, addConnectionCommand);
+        super(nameToolboxCommand, removeToolboxCommand, moveUpCommand, moveDownCommand, addConnectionCommand, addNodeCommand);
         this.sequenceFlowCommandCallback = sequenceFlowCommandCallback;
     }
 
@@ -42,6 +43,7 @@ public class BPMNToolboxControlProvider extends AbstractToolboxControlProvider<B
         // If the definition support adding in/out edges, add the control on the toolbox for this item.
         if ( supportsAddConnectionCommand( item ) ) {
             commands.add( addConnectionCommand );
+            commands.add( addNodeCommand );
         }
         
         return commands;

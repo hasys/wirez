@@ -1,9 +1,11 @@
 package org.wirez.core.client.canvas.command.impl;
 
 import org.wirez.core.api.command.CommandResult;
+import org.wirez.core.api.definition.adapter.DefinitionAdapter;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
+import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.command.AbstractCanvasGraphCommand;
 import org.wirez.core.client.canvas.command.CanvasViolation;
@@ -41,7 +43,11 @@ public abstract class DeleteCanvasElementCommand<E extends Element> extends Abst
     };
     
     protected ShapeFactory getShapeFactory(AbstractCanvasHandler context) {
-        return context.getShapeManager().getFactory( ( (Element<View<?>>) candidate ).getContent().getDefinition() );
+        final ClientDefinitionManager manager = context.getClientDefinitionManager();
+        final Object def = ( (Element<View<?>>) candidate ).getContent().getDefinition();
+        final DefinitionAdapter<Object> adapter = manager.getDefinitionAdapter( def.getClass() );
+        final String id = adapter.getId( def );
+        return context.getShapeManager().getFactory( id );
     }
 
 }

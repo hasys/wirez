@@ -11,6 +11,7 @@ public abstract class AbstractToolboxControlProvider<T> implements ToolboxContro
     protected NameToolboxCommand nameToolboxCommand;
     protected RemoveToolboxCommand removeToolboxCommand;
     protected AddConnectionCommand addConnectionCommand;
+    protected AddNodeCommand addNodeCommand;
     protected MoveUpCommand moveUpCommand;
     protected MoveDownCommand moveDownCommand;
 
@@ -19,12 +20,14 @@ public abstract class AbstractToolboxControlProvider<T> implements ToolboxContro
                                           final RemoveToolboxCommand removeToolboxCommand, 
                                           final MoveUpCommand moveUpCommand, 
                                           final MoveDownCommand moveDownCommand,
-                                          final AddConnectionCommand addConnectionCommand) {
+                                          final AddConnectionCommand addConnectionCommand,
+                                          final AddNodeCommand addNodeCommand) {
         this.nameToolboxCommand = nameToolboxCommand;
         this.removeToolboxCommand = removeToolboxCommand;
         this.moveUpCommand = moveUpCommand;
         this.moveDownCommand = moveDownCommand;
         this.addConnectionCommand = addConnectionCommand;
+        this.addNodeCommand = addNodeCommand;
     }
     
     protected List<ToolboxCommand> defaultCommands() {

@@ -17,6 +17,7 @@
 package org.wirez.core.client.canvas;
 
 import com.google.gwt.logging.client.LogConfiguration;
+import org.wirez.core.api.definition.adapter.DefinitionAdapter;
 import org.wirez.core.api.definition.adapter.DefinitionSetRuleAdapter;
 import org.wirez.core.api.diagram.Diagram;
 import org.wirez.core.api.graph.Edge;
@@ -197,7 +198,8 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
                 
                 if ( node.getContent() instanceof View ) {
                     final View viewContent = (View) node.getContent();
-                    final ShapeFactory factory = shapeManager.getFactory(viewContent.getDefinition());
+                    final ShapeFactory factory = 
+                            shapeManager.getFactory( getDefinitionId( viewContent.getDefinition() ) );
 
                     // Add the node shape into the canvas.
                     register(factory, node);
@@ -217,7 +219,8 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
                 if ( content instanceof View ) {
 
                     final View viewContent = (View) edge.getContent();
-                    final ShapeFactory factory = shapeManager.getFactory(viewContent.getDefinition());
+                    final ShapeFactory factory = 
+                            shapeManager.getFactory( getDefinitionId( viewContent.getDefinition() ) );
 
                     // Add the edge shape into the canvas.
                     register(factory, edge);
@@ -437,6 +440,11 @@ public abstract class AbstractCanvasHandler<D extends Diagram, C extends Abstrac
         return shapeManager;
     }
 
+    protected String getDefinitionId( final Object definition ) {
+        final DefinitionAdapter<Object> adapter = clientDefinitionManager.getDefinitionAdapter( definition.getClass() );
+        return adapter.getId( definition );
+    }
+    
     @Override
     public boolean equals( final Object o ) {
         if ( this == o ) {

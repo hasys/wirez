@@ -24,6 +24,6 @@ public interface ShapeManager {
     
     Collection<ShapeSet> getShapeSets();
 
-    ShapeFactory getFactory(Object definition);
+    ShapeFactory getFactory( String definitionId );
     
 }

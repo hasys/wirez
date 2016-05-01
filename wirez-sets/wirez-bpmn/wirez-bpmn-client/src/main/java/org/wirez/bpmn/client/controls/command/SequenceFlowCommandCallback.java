@@ -8,6 +8,7 @@ import org.wirez.bpmn.api.factory.BPMNDefinitionFactory;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.command.CommandResult;
 import org.wirez.core.api.command.batch.BatchCommandResult;
+import org.wirez.core.api.definition.adapter.DefinitionAdapter;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
@@ -117,7 +118,10 @@ public class SequenceFlowCommandCallback implements AddConnectionCommand.Callbac
         final int[] magnetIndexes = ShapeUtils.getDefaultMagnetsIndex( (WiresShape) sourceShape.getShapeView(),
                 (WiresShape) targetShape.getShapeView());
         
-        final ShapeFactory factory = shapeManager.getFactory(edge.getContent().getDefinition());
+        final Object seqFlow = edge.getContent().getDefinition();
+        final DefinitionAdapter<Object> adapter = definitionManager.getDefinitionAdapter( seqFlow.getClass() );
+        final String seqFlowId = adapter.getId( seqFlow );
+        final ShapeFactory factory = shapeManager.getFactory( seqFlowId );
 
         final BatchCommandResult<CanvasViolation> results =
                 canvasCommandManager
