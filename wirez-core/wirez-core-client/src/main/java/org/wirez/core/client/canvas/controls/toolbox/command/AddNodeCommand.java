@@ -83,7 +83,7 @@ public class AddNodeCommand implements ToolboxCommand{
         final Set<String> allowedDefinitions = commonLookups.getAllowedDefinitions( "org.wirez.bpmn.api.BPMNDefinitionSet", 
                 canvasHandler.getDiagram().getGraph(), node,  "org.wirez.bpmn.api.SequenceFlow", 0, 10);
         
-        log( Level.SEVERE, "Allowed Definitions -> " + allowedDefinitions );
+        // log( Level.SEVERE, "Allowed Definitions -> " + allowedDefinitions );
         
         if ( null != allowedDefinitions && !allowedDefinitions.isEmpty() ) {
 

@@ -28,7 +28,7 @@ public class AddNodeCommandView implements AddNodeCommand.View{
                                            final int x, 
                                            final int y,
                                            final ShapeGlyph... glyphs) {
-        final WiresShape wiresShape = (WiresShape) shape;
+        final WiresShape wiresShape = (WiresShape) shape.getShapeView();
         showMiniPalette( wiresShape, x, y, glyphs );
         return this;
     }
