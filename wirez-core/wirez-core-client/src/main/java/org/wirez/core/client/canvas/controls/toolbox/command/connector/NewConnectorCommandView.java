@@ -1,4 +1,4 @@
-package org.wirez.core.client.canvas.controls.toolbox.command;
+package org.wirez.core.client.canvas.controls.toolbox.command.connector;
 
 import com.ait.lienzo.client.core.shape.Arrow;
 import com.ait.lienzo.client.core.shape.IPrimitive;

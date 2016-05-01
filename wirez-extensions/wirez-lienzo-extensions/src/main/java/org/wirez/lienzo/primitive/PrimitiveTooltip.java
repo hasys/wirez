@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wirez.lienzo.tooltip;
+package org.wirez.lienzo.primitive;
 
 import com.ait.lienzo.client.core.shape.*;
 import com.ait.lienzo.client.core.types.BoundingBox;
@@ -26,7 +26,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
-public class PrimitiveWrapperTooltip extends FlowPanel {
+public class PrimitiveTooltip extends FlowPanel {
 
     private static final double PADDING = 50;
     private static final double TRIANGLE_SIZE = 20;
@@ -36,18 +36,18 @@ public class PrimitiveWrapperTooltip extends FlowPanel {
     private Layer canvasLayer = new Layer();
     private LienzoPanel lienzoPanel;
 
-    public PrimitiveWrapperTooltip() {
+    public PrimitiveTooltip() {
         
         attach();
         
     }
 
-    public PrimitiveWrapperTooltip show(final IPrimitive<?> _glyph,
-                                        final String text,
-                                        final double width,
-                                        final double height,
-                                        final double x,
-                                        final double y) {
+    public PrimitiveTooltip show(final IPrimitive<?> _glyph,
+                                 final String text,
+                                 final double width,
+                                 final double height,
+                                 final double x,
+                                 final double y) {
 
         reset();
 
@@ -92,13 +92,13 @@ public class PrimitiveWrapperTooltip extends FlowPanel {
         return this;
     }
 
-    public PrimitiveWrapperTooltip hide() {
+    public PrimitiveTooltip hide() {
         reset();
         this.getElement().getStyle().setDisplay(Style.Display.NONE);
         return this;
     }
 
-    public PrimitiveWrapperTooltip remove() {
+    public PrimitiveTooltip remove() {
         reset();
         deattach();
         return this;

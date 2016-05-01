@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package org.wirez.client.widgets.palette.tooltip;
+package org.wirez.core.client.components.glyph;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import org.wirez.core.client.shape.view.ShapeGlyph;
 
-public interface PaletteTooltip extends IsWidget {
+public interface GlyphTooltip extends IsWidget {
     
     void show(ShapeGlyph glyph, String text, double x, double y);
     

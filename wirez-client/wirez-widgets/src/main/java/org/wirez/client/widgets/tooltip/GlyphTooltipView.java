@@ -14,31 +14,31 @@
  * limitations under the License.
  */
 
-package org.wirez.client.widgets.palette.tooltip;
+package org.wirez.client.widgets.tooltip;
 
 import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.google.gwt.user.client.ui.FlowPanel;
-import org.wirez.lienzo.tooltip.PrimitiveWrapperTooltip;
+import org.wirez.lienzo.primitive.PrimitiveTooltip;
 
-public class DefaultPaletteTooltipView extends FlowPanel implements DefaultPaletteTooltip.View {
+public class GlyphTooltipView extends FlowPanel implements GlyphTooltipImpl.View {
 
    
-    DefaultPaletteTooltip presenter;
-    private PrimitiveWrapperTooltip tooltip;
+    GlyphTooltipImpl presenter;
+    private PrimitiveTooltip tooltip;
     
     @Override
-    public void init(final DefaultPaletteTooltip presenter) {
+    public void init(final GlyphTooltipImpl presenter) {
         this.presenter = presenter;
-        this.tooltip = new PrimitiveWrapperTooltip();
+        this.tooltip = new PrimitiveTooltip();
     }
 
     @Override
-    public DefaultPaletteTooltip.View show(final IPrimitive<?> _glyph, 
-                                           final String text,
-                                           final double width, 
-                                           final double height,
-                                           final double x,
-                                           final double y) {
+    public GlyphTooltipImpl.View show(final IPrimitive<?> _glyph,
+                                      final String text,
+                                      final double width,
+                                      final double height,
+                                      final double x,
+                                      final double y) {
 
         tooltip.show( _glyph, text, width, height, x, y );
         
@@ -46,7 +46,7 @@ public class DefaultPaletteTooltipView extends FlowPanel implements DefaultPalet
     }
 
     @Override
-    public DefaultPaletteTooltip.View hide() {
+    public GlyphTooltipImpl.View hide() {
         
         tooltip.hide();
         
@@ -54,7 +54,7 @@ public class DefaultPaletteTooltipView extends FlowPanel implements DefaultPalet
     }
 
     @Override
-    public DefaultPaletteTooltip.View remove() {
+    public GlyphTooltipImpl.View remove() {
         tooltip.remove();
         return this;
     }

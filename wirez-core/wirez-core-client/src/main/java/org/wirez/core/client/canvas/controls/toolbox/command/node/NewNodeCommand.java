@@ -1,4 +1,4 @@
-package org.wirez.core.client.canvas.controls.toolbox.command;
+package org.wirez.core.client.canvas.controls.toolbox.command.node;
 
 import com.ait.lienzo.client.core.shape.Shape;
 import com.google.gwt.logging.client.LogConfiguration;
@@ -10,6 +10,9 @@ import org.wirez.core.api.lookup.util.CommonLookups;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
+import org.wirez.core.client.canvas.controls.toolbox.command.Context;
+import org.wirez.core.client.canvas.controls.toolbox.command.ToolboxCommand;
+import org.wirez.core.client.components.glyph.GlyphTooltip;
 import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.client.shape.view.ShapeGlyph;
 import org.wirez.core.client.util.SVGUtils;
@@ -24,10 +27,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Dependent
-public class NewNodeCommand implements ToolboxCommand{
+public class NewNodeCommand implements ToolboxCommand {
 
     private static Logger LOGGER = Logger.getLogger(NewNodeCommand.class.getName());
-    
+
     public interface View {
 
         View init(NewNodeCommand presenter);
@@ -42,14 +45,21 @@ public class NewNodeCommand implements ToolboxCommand{
 
     CommonLookups commonLookups;
     ShapeManager shapeManager;
+    GlyphTooltip glyphTooltip;
     View view;
+    
+    private String edgeId;
+    private String[] definitionIds;
+    private ShapeFactory<?, ?, ?>[] factories;
 
     @Inject
     public NewNodeCommand(final CommonLookups commonLookups,
                           final ShapeManager shapeManager,
+                          final GlyphTooltip glyphTooltip,
                           final View view) {
         this.commonLookups = commonLookups;
         this.shapeManager = shapeManager;
+        this.glyphTooltip = glyphTooltip;
         this.view = view;
         this.icon = SVGUtils.createSVGIcon(SVGUtils.getCreateConnection());
     }
@@ -66,7 +76,12 @@ public class NewNodeCommand implements ToolboxCommand{
 
     @Override
     public String getTitle() {
-        return "Create a new node";
+        return "Creates a new node";
+    }
+
+    public NewNodeCommand setEdgeIdentifier(final String edgeId) {
+        this.edgeId = edgeId;
+        return this;
     }
 
     @Override
@@ -74,6 +89,10 @@ public class NewNodeCommand implements ToolboxCommand{
     public void execute(final Context context, 
                         final Element element) {
 
+        if ( null == edgeId ) {
+            throw new NullPointerException(" New node command requires an edge identifier.");
+        }
+        
         final AbstractCanvasHandler canvasHandler = context.getCanvasHandler();
         final AbstractCanvas canvas = canvasHandler.getCanvas();
         final org.wirez.core.client.shape.Shape shape = canvas.getShape( element.getUUID() );
@@ -83,18 +102,25 @@ public class NewNodeCommand implements ToolboxCommand{
         final Set<String> allowedDefinitions = commonLookups.getAllowedDefinitions( "org.wirez.bpmn.api.BPMNDefinitionSet", 
                 canvasHandler.getDiagram().getGraph(), node,  "org.wirez.bpmn.api.SequenceFlow", 0, 10);
         
-        // log( Level.SEVERE, "Allowed Definitions -> " + allowedDefinitions );
+        log( Level.FINE, "Allowed Definitions -> " + allowedDefinitions );
         
         if ( null != allowedDefinitions && !allowedDefinitions.isEmpty() ) {
 
+            this.definitionIds = new String[ allowedDefinitions.size() ];
+            this.factories = new ShapeFactory<?, ? ,?>[ allowedDefinitions.size() ];
+            
             final int cx = (int) context.getX();
             final int cy = (int) context.getY();
             final List<ShapeGlyph> glyphs = new LinkedList<>();
-
+            int counter = 0;
             for ( final String allowedDefId : allowedDefinitions ) {
                 final ShapeFactory<?, ? ,?> factory = shapeManager.getFactory( allowedDefId );
                 final ShapeGlyph glyph = factory.getGlyphFactory().build(50, 50);
+
+                this.definitionIds[counter] = allowedDefId;
+                this.factories[counter] = factory;
                 glyphs.add( glyph );
+                counter++;
             }
 
             view.showPalette( shape, cx, cy, glyphs.toArray( new ShapeGlyph[ glyphs.size() ] ) );
@@ -104,11 +130,41 @@ public class NewNodeCommand implements ToolboxCommand{
     }
     
     public void clear() {
+        this.definitionIds = null;
+        this.factories = null;
         view.clear();
     }
+
+    void onItemHover(final int index,
+                     final double x,
+                     final double y) {
+
+        final ShapeFactory<?, ?, ?> factory = factories[ index ];
+        final ShapeGlyph glyph = factory.getGlyphFactory().build (100, 100 );
+        glyphTooltip.show( glyph, factory.getDescription(), x, y );
+        
+    }
+
+    void onItemOut(final int index) {
+
+        glyphTooltip.hide();
+        
+    }
     
-    void onPaletteLostFocus() {
-        view.clear();
+    void onDragProxyMove(final int index,
+                         final int x,
+                         final int y) {
+        
+        // TODO
+        
+    }
+    
+    void onDragProxyEnd(final int index,
+                        final int x,
+                        final int y) {
+
+        // TODO
+        
     }
     
     private void log(final Level level, final String message) {

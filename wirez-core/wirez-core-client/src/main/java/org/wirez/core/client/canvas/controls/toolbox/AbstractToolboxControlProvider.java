@@ -1,6 +1,8 @@
 package org.wirez.core.client.canvas.controls.toolbox;
 
 import org.wirez.core.client.canvas.controls.toolbox.command.*;
+import org.wirez.core.client.canvas.controls.toolbox.command.connector.NewConnectorCommand;
+import org.wirez.core.client.canvas.controls.toolbox.command.node.NewNodeCommand;
 
 import javax.inject.Inject;
 import java.util.LinkedList;

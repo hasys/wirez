@@ -12,6 +12,7 @@ import com.ait.lienzo.client.core.shape.wires.WiresShape;
 import com.ait.lienzo.client.core.util.Geometry;
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
+import org.wirez.lienzo.primitive.PrimitiveDragProxy;
 import org.wirez.lienzo.toolbox.builder.Button;
 import org.wirez.lienzo.toolbox.event.ToolboxButtonEvent;
 import org.wirez.lienzo.toolbox.event.ToolboxButtonEventHandler;
@@ -87,7 +88,7 @@ public class ToolboxButton {
                 @Override
                 public void onNodeMouseDown(final NodeMouseDownEvent event) {
                     
-                    new ToolboxButtonDragProxy(layer, shape, event.getX(), event.getY(), new ToolboxButtonDragProxy.Callback() {
+                    new PrimitiveDragProxy(layer, shape, event.getX(), event.getY(), new PrimitiveDragProxy.Callback() {
                         @Override
                         public void onMove(final int x, final int y) {
                         }

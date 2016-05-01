@@ -1,4 +1,4 @@
-package org.wirez.core.client.canvas.controls.toolbox.command;
+package org.wirez.core.client.canvas.controls.toolbox.command.connector;
 
 import com.google.gwt.core.client.GWT;
 import org.wirez.core.api.graph.Edge;
@@ -10,6 +10,8 @@ import org.wirez.core.api.graph.processing.util.GraphBoundsIndexer;
 import org.wirez.core.api.lookup.util.CommonLookups;
 import org.wirez.core.client.canvas.Canvas;
 import org.wirez.core.client.canvas.ShapeState;
+import org.wirez.core.client.canvas.controls.toolbox.command.Context;
+import org.wirez.core.client.canvas.controls.toolbox.command.ToolboxCommand;
 import org.wirez.core.client.shape.HasDecorators;
 import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.shape.view.HasCanvasState;
@@ -27,7 +29,7 @@ public class NewConnectorCommand implements ToolboxCommand {
     
     public interface Callback {
         
-        void init(Element source);
+        void init(Element source, String edgeId);
         
         boolean isAllowed(Context context, Node target);
         
@@ -50,12 +52,17 @@ public class NewConnectorCommand implements ToolboxCommand {
     }
 
     CommonLookups commonLookups;
+    Callback callback;
     View view;
 
+    private String edgeId;
+    
     @Inject
     public NewConnectorCommand(final CommonLookups commonLookups,
+                               final Callback callback,
                                final View view) {
         this.commonLookups = commonLookups;
+        this.callback = callback;
         this.view = view;
         this.icon = SVGUtils.createSVGIcon(SVGUtils.getCreateConnection());
     }
@@ -65,7 +72,6 @@ public class NewConnectorCommand implements ToolboxCommand {
         view.init(this);
     }
 
-    private Callback callback;
     private GraphBoundsIndexer boundsIndexer;
     private Context context;
     private Element element;
@@ -79,11 +85,11 @@ public class NewConnectorCommand implements ToolboxCommand {
 
     @Override
     public String getTitle() {
-        return "Create a new connector";
+        return "Creates a new connector";
     }
 
-    public NewConnectorCommand setCallback(final Callback callback) {
-        this.callback = callback;
+    public NewConnectorCommand setEdgeIdentifier(final String edgeId ) {
+        this.edgeId = edgeId;
         return this;
     }
 
@@ -170,7 +176,12 @@ public class NewConnectorCommand implements ToolboxCommand {
 
     // TODO: Use pagination results on mini-palette.
     private void onCallbackInit( final Context context, final Element element ) {
-        callback.init(element);
+
+        if ( null == edgeId ) {
+            throw new NullPointerException(" New connector command requires an edge identifier.");
+        }
+        
+        callback.init(element, edgeId);
         
         final String defSetId = context.getCanvasHandler().getDiagram().getSettings().getDefinitionSetId();
         final Node<? extends Definition<Object>, ? extends Edge> sourceNode = 

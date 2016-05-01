@@ -1,12 +1,11 @@
 package org.wirez.bpmn.client.controls;
 
-import org.wirez.bpmn.api.BPMNDefinition;
-import org.wirez.bpmn.api.ParallelGateway;
-import org.wirez.bpmn.api.StartNoneEvent;
-import org.wirez.bpmn.api.Task;
-import org.wirez.bpmn.client.controls.command.SequenceFlowCommandCallback;
+import org.wirez.bpmn.api.*;
+import org.wirez.core.api.definition.adapter.binding.BindableAdapterUtils;
 import org.wirez.core.client.canvas.controls.toolbox.AbstractToolboxControlProvider;
 import org.wirez.core.client.canvas.controls.toolbox.command.*;
+import org.wirez.core.client.canvas.controls.toolbox.command.connector.NewConnectorCommand;
+import org.wirez.core.client.canvas.controls.toolbox.command.node.NewNodeCommand;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -15,8 +14,6 @@ import java.util.List;
 
 @Dependent
 public class BPMNToolboxControlProvider extends AbstractToolboxControlProvider<BPMNDefinition> {
-
-    SequenceFlowCommandCallback sequenceFlowCommandCallback;
     
     @Inject
     public BPMNToolboxControlProvider(final NameToolboxCommand nameToolboxCommand, 
@@ -24,15 +21,15 @@ public class BPMNToolboxControlProvider extends AbstractToolboxControlProvider<B
                                       final MoveUpCommand moveUpCommand, 
                                       final MoveDownCommand moveDownCommand, 
                                       final NewConnectorCommand addConnectionCommand,
-                                      final NewNodeCommand addNodeCommand,
-                                      final SequenceFlowCommandCallback sequenceFlowCommandCallback) {
+                                      final NewNodeCommand addNodeCommand) {
         super(nameToolboxCommand, removeToolboxCommand, moveUpCommand, moveDownCommand, addConnectionCommand, addNodeCommand);
-        this.sequenceFlowCommandCallback = sequenceFlowCommandCallback;
     }
 
     @PostConstruct
     public void init() {
-        addConnectionCommand.setCallback(sequenceFlowCommandCallback);
+        final String seqFlowId = BindableAdapterUtils.getDefinitionId( SequenceFlow.class );
+        addConnectionCommand.setEdgeIdentifier( seqFlowId );
+        addNodeCommand.setEdgeIdentifier( seqFlowId );
     }
     
     @Override

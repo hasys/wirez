@@ -1,4 +1,4 @@
-package org.wirez.core.client.canvas.controls.toolbox.command;
+package org.wirez.core.client.canvas.controls.toolbox.command.node;
 
 import com.ait.lienzo.client.core.animation.*;
 import com.ait.lienzo.client.core.shape.IPrimitive;
@@ -57,29 +57,43 @@ public class NewNodeCommandView implements NewNodeCommand.View{
                     .setIconSize(16)
                     .setX(x)
                     .setY(y)
-                    .setCloseCallback(new HoverMiniPalette.CloseCallback() {
-                        @Override
-                        public void onClose() {
-                            removeMiniPalette();
-                        }
-                    })
-                    .setItemCallback(new MiniPalette.Callback() {
+                    .setCloseCallback( () -> removeMiniPalette() )
+                    .setItemCallback( new MiniPalette.Callback() {
                         @Override
                         public void onItemHover(final int index,
                                                 final double x,
                                                 final double y) {
 
-                            // TODO: Show tooltips
+                            presenter.onItemHover( index, x ,y );
 
                         }
 
                         @Override
                         public void onItemOut(final int index) {
 
-                            // TODO: Hide tooltips
+                            presenter.onItemOut( index );
 
                         }
-                    })
+
+                        @Override
+                        public void onDragProxyMove(final int index, 
+                                                    final int x, 
+                                                    final int y) {
+                            
+                            presenter.onDragProxyMove( index, x, y );
+                            
+                        }
+
+                        @Override
+                        public void onDragProxyEnd(final int index, 
+                                                   final int x, 
+                                                   final int y) {
+                            
+                            presenter.onDragProxyEnd( index, x, y );
+                            
+                        }
+                        
+                    } )
                     .build( items )
                     .setAlpha(0)
                     .animate(AnimationTweener.LINEAR, 
@@ -91,7 +105,6 @@ public class NewNodeCommandView implements NewNodeCommand.View{
             miniPallete.clear();
             
         }
-        
         
     }
     

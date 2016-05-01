@@ -1,7 +1,7 @@
-package org.wirez.lienzo.toolbox;
+package org.wirez.lienzo.primitive;
 
+import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.ait.lienzo.client.core.shape.Layer;
-import com.ait.lienzo.client.core.shape.Shape;
 import com.google.gwt.event.dom.client.MouseMoveEvent;
 import com.google.gwt.event.dom.client.MouseMoveHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
@@ -9,9 +9,9 @@ import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.RootPanel;
 
-public class ToolboxButtonDragProxy {
+public class PrimitiveDragProxy {
 
-    interface Callback {
+    public interface Callback {
 
         void onMove(int x, int y);
 
@@ -21,21 +21,20 @@ public class ToolboxButtonDragProxy {
     
     private boolean attached = false;
     
-    public ToolboxButtonDragProxy(final Layer layer, 
-                                  final Shape<?> shape,
-                                  final int x,
-                                  final int y,
-                                  final Callback callback) {
+    public PrimitiveDragProxy(final Layer layer,
+                              final IPrimitive<?> shape,
+                              final int x,
+                              final int y,
+                              final Callback callback) {
         
-        final Shape<?> copy = shape.copy();
+        final IPrimitive<?> copy = shape.copy();
         create( layer, copy, callback );
         
     }
     
-    public void create(final Layer layer, final Shape<?> copy, final Callback callback ) {
+    private void create(final Layer layer, final IPrimitive<?> copy, final Callback callback ) {
         final HandlerRegistration[] handlerRegs = new HandlerRegistration[ 2 ];
 
-        //MouseMoveEvents
         handlerRegs[ 0 ] = RootPanel.get().addDomHandler(new MouseMoveHandler() {
 
             @Override
@@ -57,7 +56,6 @@ public class ToolboxButtonDragProxy {
             
         }, MouseMoveEvent.getType() );
 
-        //MouseUpEvent
         handlerRegs[ 1 ] = RootPanel.get().addDomHandler(new MouseUpHandler() {
 
             @Override

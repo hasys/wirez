@@ -7,6 +7,7 @@ import com.ait.lienzo.client.core.util.Geometry;
 import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.lienzo.Decorator;
 import org.wirez.lienzo.grid.Grid;
+import org.wirez.lienzo.primitive.PrimitiveDragProxy;
 
 import java.util.Iterator;
 
@@ -17,6 +18,10 @@ public abstract class AbstractMiniPalette<T> extends Group {
         void onItemHover(int index, double x, double y);
 
         void onItemOut(int index);
+
+        void onDragProxyMove(int index, int x, int y);
+
+        void onDragProxyEnd(int index, int x, int y);
         
     }
     
@@ -84,9 +89,24 @@ public abstract class AbstractMiniPalette<T> extends Group {
                 public void onHide() {
 
                    doItemOut( index );
-                    
+
                 }
             });
+
+            item.addNodeMouseDownHandler(event ->
+                    new PrimitiveDragProxy(item.getLayer(),
+                            item, event.getX(), event.getY(),
+                            new PrimitiveDragProxy.Callback() {
+                                @Override
+                                public void onMove(final int x1, final int y1) {
+                                    doDragProxyMove(index, x1, y1);
+                                }
+
+                                @Override
+                                public void onComplete(final int x1, final int y1) {
+                                    onDragProxyEnd(index, x1, y1);
+                                }
+                            }));
 
             Geometry.setScaleToFit(item, iconSize, iconSize);
             final IPrimitive<?> i = itemDecorator.build( item, toDouble(iconSize), toDouble(iconSize) )
@@ -118,6 +138,22 @@ public abstract class AbstractMiniPalette<T> extends Group {
 
         if ( null != callback ) {
             callback.onItemOut( index );
+        }
+        
+    }
+
+    protected void doDragProxyMove(final int index, int x, int y) {
+
+        if ( null != callback ) {
+            callback.onDragProxyMove( index, x, y );
+        }
+        
+    }
+
+    protected void onDragProxyEnd(final int index, final int x, final int y) {
+
+        if ( null != callback ) {
+            callback.onDragProxyEnd( index, x, y );
         }
         
     }

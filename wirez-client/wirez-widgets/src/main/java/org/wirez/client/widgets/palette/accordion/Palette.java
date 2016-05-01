@@ -25,26 +25,21 @@ import org.uberfire.client.mvp.UberView;
 import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
 import org.wirez.client.widgets.palette.accordion.group.PaletteGroup;
 import org.wirez.client.widgets.palette.accordion.group.PaletteGroupItem;
-import org.wirez.client.widgets.palette.tooltip.PaletteTooltip;
 import org.wirez.core.api.DefinitionManager;
 import org.wirez.core.api.definition.adapter.DefinitionAdapter;
-import org.wirez.core.client.canvas.AbstractCanvasHandler;
-import org.wirez.core.client.canvas.CanvasHandler;
-import org.wirez.core.client.canvas.controls.event.BuildCanvasShapeEvent;
-import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.ShapeManager;
 import org.wirez.core.client.ShapeSet;
+import org.wirez.core.client.components.glyph.GlyphTooltip;
 import org.wirez.core.client.components.glyph.ShapeGlyphDragHandler;
-import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
+import org.wirez.core.client.shape.Shape;
+import org.wirez.core.client.shape.factory.ShapeFactory;
 import org.wirez.core.client.shape.view.ShapeGlyph;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.enterprise.context.Dependent;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.util.*;
 import java.util.logging.Level;
@@ -78,7 +73,7 @@ public class Palette implements IsWidget {
     DefinitionManager definitionManager;
     ClientFactoryServices clientFactoryServices;
     SyncBeanManager beanManager;
-    PaletteTooltip paletteTooltip;
+    GlyphTooltip paletteTooltip;
     ShapeGlyphDragHandler shapeGlyphDragHandler;
     ErrorPopupPresenter errorPopupPresenter;
     View view;
@@ -92,7 +87,7 @@ public class Palette implements IsWidget {
                    final DefinitionManager definitionManager,
                    final ClientFactoryServices clientFactoryServices,
                    final SyncBeanManager beanManager,
-                   final PaletteTooltip paletteTooltip,
+                   final GlyphTooltip paletteTooltip,
                    final ShapeGlyphDragHandler shapeGlyphDragHandler) {
         this.view = view;
         this.errorPopupPresenter = errorPopupPresenter;

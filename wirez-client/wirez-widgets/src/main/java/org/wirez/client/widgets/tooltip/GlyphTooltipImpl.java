@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package org.wirez.client.widgets.palette.tooltip;
+package org.wirez.client.widgets.tooltip;
 
 import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.google.gwt.user.client.ui.Widget;
 import org.uberfire.client.mvp.UberView;
+import org.wirez.core.client.components.glyph.GlyphTooltip;
 import org.wirez.core.client.shape.view.ShapeGlyph;
 
 import javax.annotation.PostConstruct;
@@ -27,9 +28,9 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 @Dependent
-public class DefaultPaletteTooltip implements PaletteTooltip {
+public class GlyphTooltipImpl implements GlyphTooltip {
     
-    public interface View extends UberView<DefaultPaletteTooltip> {
+    public interface View extends UberView<GlyphTooltipImpl> {
         
         View show(IPrimitive<?> glyph, String text, double width, double height, double x, double y);
         
@@ -42,7 +43,7 @@ public class DefaultPaletteTooltip implements PaletteTooltip {
     View view;
 
     @Inject
-    public DefaultPaletteTooltip(final View view) {
+    public GlyphTooltipImpl(final View view) {
         this.view = view;
     }
 
