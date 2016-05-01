@@ -102,7 +102,15 @@ public class AddNodeCommand implements ToolboxCommand{
         }
         
     }
-
+    
+    public void clear() {
+        view.clear();
+    }
+    
+    void onPaletteLostFocus() {
+        view.clear();
+    }
+    
     private void log(final Level level, final String message) {
         if ( LogConfiguration.loggingIsEnabled() ) {
             LOGGER.log(level, message);

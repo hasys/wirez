@@ -1,4 +1,4 @@
-package org.wirez.lienzo.toolbox.grid;
+package org.wirez.lienzo.grid;
 
 import com.ait.lienzo.shared.core.types.Direction;
 

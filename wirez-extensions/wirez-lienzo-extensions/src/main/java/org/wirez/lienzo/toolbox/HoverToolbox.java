@@ -14,8 +14,8 @@ import com.ait.lienzo.shared.core.types.Direction;
 import com.ait.tooling.common.api.flow.Flows;
 import com.ait.tooling.nativetools.client.event.HandlerRegistrationManager;
 import com.google.gwt.event.shared.HandlerRegistration;
+import org.wirez.lienzo.grid.Grid;
 import org.wirez.lienzo.toolbox.builder.AbstractBuilder;
-import org.wirez.lienzo.toolbox.grid.Grid;
 import org.wirez.lienzo.toolbox.grid.GridToolbox;
 
 import java.util.Iterator;

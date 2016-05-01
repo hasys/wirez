@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wirez.lienzo;
+package org.wirez.lienzo.tooltip;
 
 import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.Rectangle;

@@ -42,6 +42,7 @@ import org.wirez.core.client.service.ServiceCallback;
 import org.wirez.core.client.shape.view.ShapeGlyph;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -155,7 +156,7 @@ public class Palette implements IsWidget {
     public void clear() {
         view.clear();
     }
-
+    
     private void doShow(final int width, final ShapeSet wirezShapeSet, final Object definitionSet) {
 
         // Clear current palette groups.

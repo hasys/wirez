@@ -30,9 +30,8 @@ import org.gwtbootstrap3.client.ui.Anchor;
 import org.gwtbootstrap3.client.ui.PanelCollapse;
 import org.gwtbootstrap3.client.ui.PanelGroup;
 import org.gwtbootstrap3.client.ui.PanelHeader;
-import org.wirez.client.widgets.palette.accordion.group.decorator.DefaultPaletteItemDecorator;
-import org.wirez.client.widgets.palette.accordion.group.decorator.PaletteItemDecorator;
 import org.wirez.core.api.util.UUID;
+import org.wirez.lienzo.Decorator;
 
 public class PaletteGroupView extends Composite implements PaletteGroup.View {
 
@@ -103,7 +102,7 @@ public class PaletteGroupView extends Composite implements PaletteGroup.View {
                                       final PaletteGroup.GlyphViewCallback callback) {
         assert lienzoPanel != null;
 
-        final PaletteItemDecorator decorator = new DefaultPaletteItemDecorator(new PaletteItemDecorator.Callback() {
+        final Decorator decorator = new Decorator(new Decorator.Callback() {
             @Override
             public void onShow(double absX, double absY) {
                 callback.onFocus(absX, absY);

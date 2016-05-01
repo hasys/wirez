@@ -25,5 +25,7 @@ public interface PaletteTooltip extends IsWidget {
     
     void hide();
     
+    void remove();
+    
     
 }

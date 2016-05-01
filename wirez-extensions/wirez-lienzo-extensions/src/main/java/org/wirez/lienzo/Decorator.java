@@ -14,25 +14,32 @@
  * limitations under the License.
  */
 
-package org.wirez.client.widgets.palette.accordion.group.decorator;
+package org.wirez.lienzo;
 
 import com.ait.lienzo.client.core.animation.*;
-import com.ait.lienzo.client.core.event.*;
 import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.IPrimitive;
 import com.ait.lienzo.client.core.shape.Rectangle;
 import com.ait.lienzo.shared.core.types.ColorName;
 import com.google.gwt.user.client.Timer;
 
-public class DefaultPaletteItemDecorator extends Group implements PaletteItemDecorator {
-    
+public class Decorator extends Group {
+
+    public interface Callback {
+
+        void onShow(double x, double y);
+
+        void onHide();
+
+    }
+
     private static final int TIMER_DELAY = 200;
     private static final double ANIMATION_DURATION = 500;
     private double padding = 5;
     Rectangle decorator;
     Callback callback;
 
-    public DefaultPaletteItemDecorator(final Callback callback) {
+    public Decorator(final Callback callback) {
         this.callback = callback;
     }
 
@@ -43,19 +50,16 @@ public class DefaultPaletteItemDecorator extends Group implements PaletteItemDec
         }
     };
 
-    @Override
-    public PaletteItemDecorator setPadding(final double padding) {
+    public Decorator setPadding(final double padding) {
         this.padding = padding;
         return this;
     }
 
-    @Override
-    public PaletteItemDecorator setCallback(final Callback callback) {
+    public Decorator setCallback(final Callback callback) {
         this.callback = callback;
         return this;
     }
 
-    @Override
     public IPrimitive<?> build(final IPrimitive<?> item, final double width, final double height) {
 
         decorator = new Rectangle(width + padding, height + padding)
@@ -71,27 +75,12 @@ public class DefaultPaletteItemDecorator extends Group implements PaletteItemDec
         item.setX(padding / 2);
         item.setY(padding / 2);
 
-        decorator.addNodeMouseEnterHandler(new NodeMouseEnterHandler() {
-            @Override
-            public void onNodeMouseEnter(NodeMouseEnterEvent nodeMouseEnterEvent) {
-                show(nodeMouseEnterEvent.getMouseEvent().getClientX(), nodeMouseEnterEvent.getMouseEvent().getClientY());
-            }
-        });
+        decorator.addNodeMouseEnterHandler(nodeMouseEnterEvent -> show(nodeMouseEnterEvent.getMouseEvent().getClientX(), nodeMouseEnterEvent.getMouseEvent().getClientY()));
         
-        decorator.addNodeMouseExitHandler(new NodeMouseExitHandler() {
-            @Override
-            public void onNodeMouseExit(NodeMouseExitEvent nodeMouseExitEvent) {
-                hide();
-            }
-        });
+        decorator.addNodeMouseExitHandler(nodeMouseExitEvent -> hide());
 
         
-        decorator.addNodeMouseMoveHandler(new NodeMouseMoveHandler() {
-            @Override
-            public void onNodeMouseMove(NodeMouseMoveEvent nodeMouseMoveEvent) {
-                timer.cancel();
-            }
-        });
+        decorator.addNodeMouseMoveHandler(nodeMouseMoveEvent -> timer.cancel());
         
         item.setDraggable(false);
         decorator.setDraggable(false).moveToTop();
@@ -99,7 +88,7 @@ public class DefaultPaletteItemDecorator extends Group implements PaletteItemDec
         return this;
     }
 
-    public PaletteItemDecorator show(final double x, final double y) {
+    public Decorator show(final double x, final double y) {
         if (!timer.isRunning()) {
             decorator.animate(AnimationTweener.LINEAR,
                     AnimationProperties.toPropertyList(AnimationProperty.Properties.STROKE_ALPHA(1)),
@@ -116,7 +105,7 @@ public class DefaultPaletteItemDecorator extends Group implements PaletteItemDec
         return this;
     }
 
-    public PaletteItemDecorator hide() {
+    public Decorator hide() {
         if (!timer.isRunning()) {
          decorator.animate(AnimationTweener.LINEAR,
                 AnimationProperties.toPropertyList(AnimationProperty.Properties.STROKE_ALPHA(0)),

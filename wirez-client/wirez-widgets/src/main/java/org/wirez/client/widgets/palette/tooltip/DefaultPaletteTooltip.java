@@ -22,6 +22,7 @@ import org.uberfire.client.mvp.UberView;
 import org.wirez.core.client.shape.view.ShapeGlyph;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
@@ -33,6 +34,8 @@ public class DefaultPaletteTooltip implements PaletteTooltip {
         View show(IPrimitive<?> glyph, String text, double width, double height, double x, double y);
         
         View hide();
+
+        View remove();
         
     }
     
@@ -53,6 +56,11 @@ public class DefaultPaletteTooltip implements PaletteTooltip {
         view.init(this);
     }
 
+    @PreDestroy
+    public void finishHim() {
+        remove();
+    }
+
     @Override
     public void show(final ShapeGlyph glyph, final String text, final double x, final double y) {
         view.show(glyph.getGroup(), text, glyph.getWidth(), glyph.getHeight(), x, y);
@@ -61,6 +69,11 @@ public class DefaultPaletteTooltip implements PaletteTooltip {
     @Override
     public void hide() {
         view.hide();
+    }
+
+    @Override
+    public void remove() {
+        view.remove();
     }
 
 }
