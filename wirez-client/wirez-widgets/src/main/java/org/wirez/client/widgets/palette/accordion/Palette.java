@@ -45,6 +45,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+// TODO: Refactor implementing org.wirez.core.client.components.palette.Palette
 @Dependent
 public class Palette implements IsWidget {
 

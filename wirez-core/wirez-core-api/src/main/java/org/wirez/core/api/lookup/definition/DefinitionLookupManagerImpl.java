@@ -68,6 +68,9 @@ public class DefinitionLookupManagerImpl
         final DefinitionAdapter<Object> definitionAdapter = definitionManager.getDefinitionAdapter( def.getClass() );
         
         switch ( key ) {
+
+            case "id":
+                return defId.equals( value );
             
             case "type":
                 final Class<? extends Element> elemType = definitionAdapter.getGraphElement( def );

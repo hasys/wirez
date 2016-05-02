@@ -13,8 +13,8 @@ import org.wirez.core.client.canvas.AbstractCanvas;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
 import org.wirez.core.client.canvas.controls.toolbox.command.Context;
 import org.wirez.core.client.canvas.controls.toolbox.command.ToolboxCommand;
+import org.wirez.core.client.components.drag.CanvasDragProxy;
 import org.wirez.core.client.components.drag.DragProxy;
-import org.wirez.core.client.components.glyph.GlyphDragProxy;
 import org.wirez.core.client.components.glyph.GlyphMiniPalette;
 import org.wirez.core.client.components.glyph.GlyphTooltip;
 import org.wirez.core.client.shape.factory.ShapeFactory;
@@ -43,24 +43,25 @@ public class NewNodeCommand implements ToolboxCommand {
     ShapeManager shapeManager;
     GlyphTooltip glyphTooltip;
     GlyphMiniPalette glyphMiniPalette;
-    GlyphDragProxy glyphDragProxy;
+    CanvasDragProxy canvasDragProxy;
     
     private String edgeId;
     private String[] definitionIds;
     private ShapeFactory<?, ?, ?>[] factories;
     private AbstractCanvasHandler canvasHandler;
+    private org.wirez.core.client.shape.Shape shape;
 
     @Inject
     public NewNodeCommand(final CommonLookups commonLookups,
                           final ShapeManager shapeManager,
                           final GlyphTooltip glyphTooltip,
                           final GlyphMiniPalette glyphMiniPalette,
-                          final GlyphDragProxy glyphDragProxy) {
+                          final CanvasDragProxy canvasDragProxy) {
         this.commonLookups = commonLookups;
         this.shapeManager = shapeManager;
         this.glyphTooltip = glyphTooltip;
         this.glyphMiniPalette = glyphMiniPalette;
-        this.glyphDragProxy = glyphDragProxy;
+        this.canvasDragProxy = canvasDragProxy;
         this.icon = SVGUtils.createSVGIcon(SVGUtils.getAddIcon());
     }
     
@@ -177,28 +178,49 @@ public class NewNodeCommand implements ToolboxCommand {
 
         GWT.log("MouseDown - [index=" + index + ", x=" + x + ", y=" + y + "]");
 
+        final String defId = definitionIds[ index ];
         final ShapeFactory<?, ?, ?> factory = factories[ index ];
-        final ShapeGlyph glyph = factory.getGlyphFactory().build (100, 100 );
-        glyphDragProxy.create(canvasHandler.getCanvas().getLayer(), x, y, glyph, new DragProxy.Callback() {
+        
+        canvasDragProxy.create(canvasHandler.getCanvas().getLayer(), x, y, new CanvasDragProxy.CanvasProxyItem() {
+           
             @Override
-            public void onMove(final int x, 
-                               final int y) {
+            public String getDefinitionSetId() {
+                //  TODO
+                return null;
+            }
 
-                GWT.log("DragProxy Move - [index=" + index + ", x=" + x + ", y=" + y + "]");
+            @Override
+            public String getDefinitionId() {
+                return defId;
+            }
+
+            @Override
+            public ShapeFactory<?, ?, ?> getShapeFactory() {
+                return factory;
+            }
+
+            @Override
+            public AbstractCanvasHandler getCanvasHandler() {
+                return canvasHandler;
+            }
+            
+        }, new DragProxy.Callback() {
+            
+            @Override
+            public void onMove(int x, int y) {
                 
             }
 
             @Override
-            public void onComplete(final int x, 
-                                   final int y) {
+            public void onComplete(int x, int y) {
 
-                GWT.log("DragProxy Complete - [index=" + index + ", x=" + x + ", y=" + y + "]");
-                
             }
+            
         });
         
+        
     }
-    
+
     private void log(final Level level, final String message) {
         if ( LogConfiguration.loggingIsEnabled() ) {
             LOGGER.log(level, message);

@@ -41,7 +41,13 @@ public final class DefinitionLookupRequestImpl extends AbstractLookupRequest imp
             return this;
         }
 
-        public Builder id( final Type type ) {
+        public Builder id( final String id) {
+            criteria.append( "id=" ).append( id ).append( ";" );
+            return this;
+        }
+
+
+        public Builder type( final Type type ) {
             criteria.append( "type=" ).append( type.name().toLowerCase() ).append( ";" );
             return this;
         }

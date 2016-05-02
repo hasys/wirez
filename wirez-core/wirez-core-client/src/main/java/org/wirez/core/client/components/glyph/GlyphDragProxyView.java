@@ -15,7 +15,7 @@ public class GlyphDragProxyView implements GlyphDragProxy.View {
 
         final LienzoLayer lienzoLayer = (LienzoLayer) layer;
         
-        new PrimitiveDragProxy(lienzoLayer.getLienzoLayer(), copy, x, y, new PrimitiveDragProxy.Callback() {
+        new PrimitiveDragProxy(lienzoLayer.getLienzoLayer(), copy, x, y, 500, new PrimitiveDragProxy.Callback() {
             @Override
             public void onMove(final int x, final int y) {
                 callback.onMove( x, y );

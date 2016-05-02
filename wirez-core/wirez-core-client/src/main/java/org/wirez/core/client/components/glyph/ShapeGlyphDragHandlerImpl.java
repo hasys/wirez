@@ -30,6 +30,7 @@ import org.wirez.core.client.shape.view.ShapeGlyph;
 
 import javax.enterprise.context.Dependent;
 
+// TODO: Refactor implementing DragProxy<T>
 @Dependent
 public class ShapeGlyphDragHandlerImpl implements ShapeGlyphDragHandler {
 

@@ -7,7 +7,7 @@ import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.graph.processing.util.GraphBoundsIndexer;
+import org.wirez.core.api.graph.util.GraphBoundsIndexer;
 import org.wirez.core.api.graph.util.GraphUtils;
 import org.wirez.core.client.ClientDefinitionManager;
 import org.wirez.core.client.canvas.AbstractCanvasHandler;
@@ -19,8 +19,6 @@ import org.wirez.core.client.canvas.controls.AbstractCanvasHandlerControl;
 import org.wirez.core.client.canvas.controls.event.BuildCanvasShapeEvent;
 import org.wirez.core.client.canvas.event.CanvasProcessingCompletedEvent;
 import org.wirez.core.client.canvas.event.CanvasProcessingStartedEvent;
-import org.wirez.core.client.canvas.lienzo.LienzoLayer;
-import org.wirez.core.client.canvas.lienzo.LienzoLayerUtils;
 import org.wirez.core.client.service.ClientFactoryServices;
 import org.wirez.core.client.service.ClientRuntimeError;
 import org.wirez.core.client.service.ServiceCallback;
@@ -48,6 +46,7 @@ public class BuilderControlImpl extends AbstractCanvasHandlerControl
     CanvasCommandFactory canvasCommandFactory;
     Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent;
     Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent;
+    GraphBoundsIndexer graphBoundsIndexer;
 
 
     @Inject
@@ -55,12 +54,14 @@ public class BuilderControlImpl extends AbstractCanvasHandlerControl
                               final ClientFactoryServices clientFactoryServices,
                               final @Session CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager,
                               final CanvasCommandFactory canvasCommandFactory,
+                              final GraphBoundsIndexer graphBoundsIndexer,
                               final Event<CanvasProcessingStartedEvent> canvasProcessingStartedEvent,
                               final Event<CanvasProcessingCompletedEvent> canvasProcessingCompletedEvent) {
         this.clientDefinitionManager = clientDefinitionManager;
         this.clientFactoryServices = clientFactoryServices;
         this.canvasCommandManager = canvasCommandManager;
         this.canvasCommandFactory = canvasCommandFactory;
+        this.graphBoundsIndexer = graphBoundsIndexer;
         this.canvasProcessingStartedEvent = canvasProcessingStartedEvent;
         this.canvasProcessingCompletedEvent = canvasProcessingCompletedEvent;
     }
@@ -107,8 +108,10 @@ public class BuilderControlImpl extends AbstractCanvasHandlerControl
 
                 Node<View<?>, Edge> parent = null;
                 if ( _x > -1 && _y > -1) {
-                    final GraphBoundsIndexer boundsIndexer = new GraphBoundsIndexer(canvasHandler.getDiagram().getGraph());
-                    parent = boundsIndexer.getNodeAt(_x, _y);
+
+                    parent = graphBoundsIndexer
+                            .forGraph( canvasHandler.getDiagram().getGraph() )
+                            .get(_x, _y);
 
                     /*final LienzoLayer lienzoLayer = (LienzoLayer) canvasHandler.getCanvas().getLayer();
                     final String viewUUID = LienzoLayerUtils.getUUID_At( lienzoLayer, _x, _y );

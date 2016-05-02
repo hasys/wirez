@@ -6,15 +6,13 @@ import org.wirez.core.api.graph.Element;
 import org.wirez.core.api.graph.Graph;
 import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.definition.Definition;
-import org.wirez.core.api.graph.processing.util.GraphBoundsIndexer;
+import org.wirez.core.api.graph.util.GraphBoundsIndexer;
 import org.wirez.core.api.lookup.util.CommonLookups;
 import org.wirez.core.client.canvas.Canvas;
-import org.wirez.core.client.canvas.ShapeState;
 import org.wirez.core.client.canvas.controls.toolbox.command.Context;
 import org.wirez.core.client.canvas.controls.toolbox.command.ToolboxCommand;
-import org.wirez.core.client.shape.HasDecorators;
+import org.wirez.core.client.canvas.util.CanvasHighlight;
 import org.wirez.core.client.shape.Shape;
-import org.wirez.core.client.shape.view.HasCanvasState;
 import org.wirez.core.client.util.SVGUtils;
 
 import javax.annotation.PostConstruct;
@@ -51,6 +49,7 @@ public class NewConnectorCommand implements ToolboxCommand {
         
     }
 
+    GraphBoundsIndexer graphBoundsIndexer;
     CommonLookups commonLookups;
     Callback callback;
     View view;
@@ -58,9 +57,11 @@ public class NewConnectorCommand implements ToolboxCommand {
     private String edgeId;
     
     @Inject
-    public NewConnectorCommand(final CommonLookups commonLookups,
+    public NewConnectorCommand(final GraphBoundsIndexer graphBoundsIndexer,
+                               final CommonLookups commonLookups,
                                final Callback callback,
                                final View view) {
+        this.graphBoundsIndexer = graphBoundsIndexer;
         this.commonLookups = commonLookups;
         this.callback = callback;
         this.view = view;
@@ -75,7 +76,7 @@ public class NewConnectorCommand implements ToolboxCommand {
     private GraphBoundsIndexer boundsIndexer;
     private Context context;
     private Element element;
-    private Shape shape;
+    private CanvasHighlight canvasHighlight;
 
 
     @Override
@@ -97,76 +98,35 @@ public class NewConnectorCommand implements ToolboxCommand {
     public void execute(final Context context, final Element element) {
         this.element = element;
         this.context = context;
-        this.boundsIndexer = new GraphBoundsIndexer(context.getCanvasHandler().getDiagram().getGraph());
+        this.canvasHighlight = new CanvasHighlight( context.getCanvasHandler() );
+        this.boundsIndexer.forGraph( context.getCanvasHandler().getDiagram().getGraph() );
         onCallbackInit( context, element );
         view.show(context.getCanvasHandler().getCanvas(),
                 context.getX(), context.getY());
     }
     
     private void clear() {
-        unhighLightShape();
+        this.canvasHighlight.unhighLight();
+        this.canvasHighlight = null;
         view.clear();
         context = null;
         element = null;
-        shape = null;
-    }
-    
-    private void highLightShape(final Node node) {
-        if ( null != this.shape && !node.getUUID().equals(shape.getUUID()) ) {
-            unhighLightShape();
-        }
-        if ( null == this.shape ) {
-            final String uuid = node.getUUID();
-            final Shape shape = getShape(uuid);
-            if ( null != shape ) {
-                this.shape = shape;
-
-                if (shape.getShapeView() instanceof HasCanvasState) {
-                    final HasCanvasState canvasStateMutation = (HasCanvasState) shape.getShapeView();
-                    canvasStateMutation.applyState(ShapeState.HIGHLIGHT);
-                } else if (shape.getShapeView() instanceof HasDecorators) {
-                    view.highlight(context.getCanvasHandler().getCanvas(), shape);
-                    
-                }
-                
-            }
-        }
-    }
-
-    private void unhighLightShape() {
-        if ( null != this.shape ) {
-
-            if (shape instanceof HasCanvasState) {
-                final HasCanvasState canvasStateMutation = (HasCanvasState) shape.getShapeView();
-                canvasStateMutation.applyState(ShapeState.UNHIGHLIGHT);
-            } else if (shape.getShapeView() instanceof HasDecorators) {
-                view.unhighlight(context.getCanvasHandler().getCanvas(), shape);
-            }
-
-            this.shape = null;
-            
-        }
-    }
-
-   
-    private Shape getShape(final String uuid) {
-        return context.getCanvasHandler().getCanvas().getShape(uuid);
     }
     
     void onMouseMove(final double x, final double y) {
-        final Node node = boundsIndexer.getNodeAt(x, y);
+        final Node node = boundsIndexer.get(x, y);
         if ( null != node 
                 && !node.getUUID().equals(element.getUUID())
                 && callback.isAllowed( context, node ) ) {
-            highLightShape(node);
+            canvasHighlight.highLight(node);
         } else {
-            unhighLightShape();
+            canvasHighlight.unhighLight();
         }
     }
 
     void onMouseClick(final double x, final double y) {
         if ( null != callback  ) {
-            final Node node = boundsIndexer.getNodeAt(x, y);
+            final Node node = boundsIndexer.get(x, y);
             if ( null != node && !node.getUUID().equals(element.getUUID()) ) {
                 callback.accept(context,node);
             }

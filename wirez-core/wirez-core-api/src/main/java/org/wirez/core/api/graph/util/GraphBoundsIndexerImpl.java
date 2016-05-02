@@ -1,24 +1,30 @@
-package org.wirez.core.api.graph.processing.util;
+package org.wirez.core.api.graph.util;
 
-import org.wirez.core.api.graph.*;
+import org.wirez.core.api.graph.Edge;
+import org.wirez.core.api.graph.Graph;
+import org.wirez.core.api.graph.Node;
 import org.wirez.core.api.graph.content.relationship.Child;
 import org.wirez.core.api.graph.content.view.Bounds;
 import org.wirez.core.api.graph.content.view.View;
-import org.wirez.core.api.graph.processing.traverse.content.*;
+import org.wirez.core.api.graph.processing.traverse.content.AbstractContentTraverseCallback;
+import org.wirez.core.api.graph.processing.traverse.content.ChildrenTraverseProcessorImpl;
 import org.wirez.core.api.graph.processing.traverse.tree.TreeWalkTraverseProcessorImpl;
-import org.wirez.core.api.graph.util.GraphUtils;
 
 import java.util.Stack;
 
-public class GraphBoundsIndexer {
+public class GraphBoundsIndexerImpl implements GraphBoundsIndexer {
+    
+    private Graph<View, Node<View, Edge>> graph;
 
-    private final Graph<View, Node<View, Edge>> graph;
-
-    public GraphBoundsIndexer(final Graph<View, Node<View, Edge>> graph) {
+    @Override
+    public GraphBoundsIndexerImpl forGraph(Graph<View, Node<View, Edge>> graph) {
         this.graph = graph;
+        return this;
     }
-
-    public Node getNodeAt(final double x, final double y) {
+    
+    @Override
+    public Node get(final double x, 
+                    final double y) {
         return traverseChildren(x, y);
     }
 
@@ -55,7 +61,7 @@ public class GraphBoundsIndexer {
                 double parentY = 0;
 
                 if ( !parents.isEmpty() ) {
-                    
+
                     for ( Node tParent : parents ) {
                         final Object content = tParent.getContent();
                         if (content instanceof View) {
@@ -78,11 +84,11 @@ public class GraphBoundsIndexer {
     }
 
     private boolean isNodeAt(final Node node,
-                             final double parentX, 
+                             final double parentX,
                              final double parentY,
-                             final double mouseX, 
+                             final double mouseX,
                              final double mouseY) {
-        
+
         final Object c = node.getContent();
         final Bounds bounds = ( (View) node.getContent()).getBounds();
         final Bounds.Bound ulBound = bounds.getUpperLeft();
@@ -92,8 +98,8 @@ public class GraphBoundsIndexer {
         final double lrX = lrBound.getX() + parentX;
         final double lrY = lrBound.getY() + parentY;
 
-        
-        if ( mouseX >= ulX && mouseX <= lrX && 
+
+        if ( mouseX >= ulX && mouseX <= lrX &&
                 mouseY >= ulY && mouseY <= lrY ) {
             return true;
         }
