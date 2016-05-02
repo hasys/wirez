@@ -7,7 +7,6 @@ import com.ait.lienzo.client.core.util.Geometry;
 import com.ait.lienzo.shared.core.types.ColorName;
 import org.wirez.lienzo.Decorator;
 import org.wirez.lienzo.grid.Grid;
-import org.wirez.lienzo.primitive.PrimitiveDragProxy;
 
 import java.util.Iterator;
 
@@ -19,9 +18,9 @@ public abstract class AbstractMiniPalette<T> extends Group {
 
         void onItemOut(int index);
 
-        void onDragProxyMove(int index, int x, int y);
+        void onItemMouseDown(int index, int x, int y);
 
-        void onDragProxyEnd(int index, int x, int y);
+        void onItemClick(int index, int x, int y);
         
     }
     
@@ -93,27 +92,20 @@ public abstract class AbstractMiniPalette<T> extends Group {
                 }
             });
 
-            item.addNodeMouseDownHandler(event ->
-                    new PrimitiveDragProxy(item.getLayer(),
-                            item, event.getX(), event.getY(),
-                            new PrimitiveDragProxy.Callback() {
-                                @Override
-                                public void onMove(final int x1, final int y1) {
-                                    doDragProxyMove(index, x1, y1);
-                                }
-
-                                @Override
-                                public void onComplete(final int x1, final int y1) {
-                                    onDragProxyEnd(index, x1, y1);
-                                }
-                            }));
+            final double px = x + point.getX();
+            final double py = y + point.getY();
 
             Geometry.setScaleToFit(item, iconSize, iconSize);
             final IPrimitive<?> i = itemDecorator.build( item, toDouble(iconSize), toDouble(iconSize) )
-                    .setX(x + point.getX())
-                    .setY(y + point.getY());
+                    .setX( px )
+                    .setY( py );
             
             this.add( i );
+
+            i.addNodeMouseDownHandler(event -> onItemMouseDown( index, event.getX(), event.getY()) );
+            
+            i.addNodeMouseClickHandler(event -> onItemClick( index, event.getX(), event.getY()) );
+            
         }
                 
         return (T) this;
@@ -142,18 +134,18 @@ public abstract class AbstractMiniPalette<T> extends Group {
         
     }
 
-    protected void doDragProxyMove(final int index, int x, int y) {
+    protected void onItemMouseDown(final int index, int x, int y) {
 
         if ( null != callback ) {
-            callback.onDragProxyMove( index, x, y );
+            callback.onItemMouseDown( index, x, y );
         }
         
     }
 
-    protected void onDragProxyEnd(final int index, final int x, final int y) {
+    protected void onItemClick(final int index, final int x, final int y) {
 
         if ( null != callback ) {
-            callback.onDragProxyEnd( index, x, y );
+            callback.onItemClick( index, x, y );
         }
         
     }
