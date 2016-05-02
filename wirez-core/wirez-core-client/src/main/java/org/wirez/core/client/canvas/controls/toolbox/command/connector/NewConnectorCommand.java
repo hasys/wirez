@@ -16,12 +16,10 @@ import org.wirez.core.client.shape.Shape;
 import org.wirez.core.client.util.SVGUtils;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import java.util.Set;
 
-@Dependent
-public class NewConnectorCommand implements ToolboxCommand {
+public abstract class NewConnectorCommand implements ToolboxCommand {
 
     private final com.ait.lienzo.client.core.shape.Shape<?> icon;
     
@@ -54,8 +52,6 @@ public class NewConnectorCommand implements ToolboxCommand {
     Callback callback;
     View view;
 
-    private String edgeId;
-    
     @Inject
     public NewConnectorCommand(final GraphBoundsIndexer graphBoundsIndexer,
                                final CommonLookups commonLookups,
@@ -79,6 +75,8 @@ public class NewConnectorCommand implements ToolboxCommand {
     private CanvasHighlight canvasHighlight;
 
 
+    protected abstract String getEdgeIdentifier();
+    
     @Override
     public com.ait.lienzo.client.core.shape.Shape<?> getIcon() {
         return icon;
@@ -87,11 +85,6 @@ public class NewConnectorCommand implements ToolboxCommand {
     @Override
     public String getTitle() {
         return "Creates a new connector";
-    }
-
-    public NewConnectorCommand setEdgeIdentifier(final String edgeId ) {
-        this.edgeId = edgeId;
-        return this;
     }
 
     @Override
@@ -137,11 +130,11 @@ public class NewConnectorCommand implements ToolboxCommand {
     // TODO: Use pagination results on mini-palette.
     private void onCallbackInit( final Context context, final Element element ) {
 
-        if ( null == edgeId ) {
+        if ( null == getEdgeIdentifier() ) {
             throw new NullPointerException(" New connector command requires an edge identifier.");
         }
         
-        callback.init(element, edgeId);
+        callback.init(element, getEdgeIdentifier());
         
         final String defSetId = context.getCanvasHandler().getDiagram().getSettings().getDefinitionSetId();
         final Node<? extends Definition<Object>, ? extends Edge> sourceNode = 

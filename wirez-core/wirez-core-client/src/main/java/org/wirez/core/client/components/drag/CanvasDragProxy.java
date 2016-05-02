@@ -70,7 +70,7 @@ public class CanvasDragProxy implements DragProxy<CanvasDragProxy.CanvasProxyIte
                        final int x, 
                        final int y, 
                        final CanvasProxyItem item, 
-                       final Callback callback) {
+                       final Callback canvasCallback) {
 
         this.canvasHighlight = new CanvasHighlight( item.getCanvasHandler() );
         this.graphBoundsIndexer.forGraph( item.getCanvasHandler().getDiagram().getGraph() );
@@ -96,21 +96,19 @@ public class CanvasDragProxy implements DragProxy<CanvasDragProxy.CanvasProxyIte
                                final int y) {
 
                 final Node<? extends Definition<?>, Edge> parent = graphBoundsIndexer.get(x, y);
+                final boolean isValid = checkParentContainment( parent, labels );
 
-                boolean isValid = false;
-                
-                if ( null != parent ) {
-
-                    final Object parentDefinition = parent.getContent().getDefinition();
-                    final DefinitionAdapter<Object> parentAdapter= clientDefinitionManager.getDefinitionAdapter( parentDefinition.getClass() );
-                    final String parentId = parentAdapter.getId( parentDefinition );
-                    final RuleViolations violations = containmentRuleManager.evaluate( parentId, labels );
-                    isValid = isValid( violations );
-                }
+                GWT.log("CanvasDragProxy - onMove for parent="
+                        + ( parent != null ? parent.getUUID() : "no-parent" ) 
+                        + " [isValid=" + isValid + "]");
 
                 if ( isValid ) {
                     
                     canvasHighlight.highLight( parent );
+
+                    if ( null != canvasCallback ) {
+                        canvasCallback.onMove( x, y );
+                    }
                     
                 } else {
 
@@ -125,15 +123,45 @@ public class CanvasDragProxy implements DragProxy<CanvasDragProxy.CanvasProxyIte
                                    final int y) {
 
                 final Node<? extends Definition<?>, Edge> parent = graphBoundsIndexer.get(x, y);
+                final boolean isValid = checkParentContainment( parent, labels );
 
-                GWT.log("CanvasDragProxy - onComplete for uuid=" 
-                        + ( parent != null ? parent.getUUID() : "no-parent" ) );
+                GWT.log("CanvasDragProxy - onComplete for uuid="
+                        + ( parent != null ? parent.getUUID() : "no-parent" )
+                        + " [isValid=" + isValid + "]");
 
-                // TODO
+
+                if ( isValid ) {
+
+                    if ( null != canvasCallback ) {
+                        canvasCallback.onComplete( x, y );
+                    }
+                    
+                } else {
+                    
+                    // TODO
+                    
+                }
 
             }
         });
         
+    }
+    
+    private boolean checkParentContainment(final Node<? extends Definition<?>, Edge> parent,
+                                final Set<String> candidateLabels) {
+
+        boolean isValid = false;
+
+        if ( null != parent ) {
+
+            final Object parentDefinition = parent.getContent().getDefinition();
+            final DefinitionAdapter<Object> parentAdapter= clientDefinitionManager.getDefinitionAdapter( parentDefinition.getClass() );
+            final String parentId = parentAdapter.getId( parentDefinition );
+            final RuleViolations violations = containmentRuleManager.evaluate( parentId, candidateLabels );
+            isValid = isValid( violations );
+        }
+        
+        return isValid;
     }
 
     private boolean isValid( final RuleViolations violations ) {

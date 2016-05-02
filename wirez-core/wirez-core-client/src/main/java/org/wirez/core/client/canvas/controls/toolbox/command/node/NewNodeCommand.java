@@ -22,7 +22,6 @@ import org.wirez.core.client.shape.view.ShapeGlyph;
 import org.wirez.core.client.util.SVGUtils;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,8 +29,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Dependent
-public class NewNodeCommand implements ToolboxCommand {
+public abstract class NewNodeCommand implements ToolboxCommand {
 
     private static Logger LOGGER = Logger.getLogger(NewNodeCommand.class.getName());
     private static final int PADDING = 10;
@@ -45,7 +43,6 @@ public class NewNodeCommand implements ToolboxCommand {
     GlyphMiniPalette glyphMiniPalette;
     CanvasDragProxy canvasDragProxy;
     
-    private String edgeId;
     private String[] definitionIds;
     private ShapeFactory<?, ?, ?>[] factories;
     private AbstractCanvasHandler canvasHandler;
@@ -64,6 +61,10 @@ public class NewNodeCommand implements ToolboxCommand {
         this.canvasDragProxy = canvasDragProxy;
         this.icon = SVGUtils.createSVGIcon(SVGUtils.getAddIcon());
     }
+    
+    protected abstract String getDefinitionSetIdentifier();
+
+    protected abstract String getEdgeIdentifier();
     
     @PostConstruct
     public void init() {
@@ -85,17 +86,12 @@ public class NewNodeCommand implements ToolboxCommand {
         return "Creates a new node";
     }
 
-    public NewNodeCommand setEdgeIdentifier(final String edgeId) {
-        this.edgeId = edgeId;
-        return this;
-    }
-
     @Override
     @SuppressWarnings("unchecked")
     public void execute(final Context context, 
                         final Element element) {
 
-        if ( null == edgeId ) {
+        if ( null == getEdgeIdentifier() ) {
             throw new NullPointerException(" New node command requires an edge identifier.");
         }
         
@@ -185,8 +181,7 @@ public class NewNodeCommand implements ToolboxCommand {
            
             @Override
             public String getDefinitionSetId() {
-                //  TODO
-                return null;
+                return NewNodeCommand.this.getDefinitionSetIdentifier();
             }
 
             @Override
@@ -207,12 +202,12 @@ public class NewNodeCommand implements ToolboxCommand {
         }, new DragProxy.Callback() {
             
             @Override
-            public void onMove(int x, int y) {
+            public void onMove(final int x, final int y) {
                 
             }
 
             @Override
-            public void onComplete(int x, int y) {
+            public void onComplete(final int x, final int y) {
 
             }
             

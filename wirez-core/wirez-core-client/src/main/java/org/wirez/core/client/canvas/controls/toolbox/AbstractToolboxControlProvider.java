@@ -1,8 +1,6 @@
 package org.wirez.core.client.canvas.controls.toolbox;
 
 import org.wirez.core.client.canvas.controls.toolbox.command.*;
-import org.wirez.core.client.canvas.controls.toolbox.command.connector.NewConnectorCommand;
-import org.wirez.core.client.canvas.controls.toolbox.command.node.NewNodeCommand;
 
 import javax.inject.Inject;
 import java.util.LinkedList;
@@ -12,8 +10,6 @@ public abstract class AbstractToolboxControlProvider<T> implements ToolboxContro
 
     protected NameToolboxCommand nameToolboxCommand;
     protected RemoveToolboxCommand removeToolboxCommand;
-    protected NewConnectorCommand addConnectionCommand;
-    protected NewNodeCommand addNodeCommand;
     protected MoveUpCommand moveUpCommand;
     protected MoveDownCommand moveDownCommand;
 
@@ -21,15 +17,11 @@ public abstract class AbstractToolboxControlProvider<T> implements ToolboxContro
     public AbstractToolboxControlProvider(final NameToolboxCommand nameToolboxCommand, 
                                           final RemoveToolboxCommand removeToolboxCommand, 
                                           final MoveUpCommand moveUpCommand, 
-                                          final MoveDownCommand moveDownCommand,
-                                          final NewConnectorCommand addConnectionCommand,
-                                          final NewNodeCommand addNodeCommand) {
+                                          final MoveDownCommand moveDownCommand) {
         this.nameToolboxCommand = nameToolboxCommand;
         this.removeToolboxCommand = removeToolboxCommand;
         this.moveUpCommand = moveUpCommand;
         this.moveDownCommand = moveDownCommand;
-        this.addConnectionCommand = addConnectionCommand;
-        this.addNodeCommand = addNodeCommand;
     }
     
     protected List<ToolboxCommand> defaultCommands() {

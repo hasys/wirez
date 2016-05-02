@@ -88,7 +88,7 @@ public class ToolboxButton {
                 @Override
                 public void onNodeMouseDown(final NodeMouseDownEvent event) {
                     
-                    new PrimitiveDragProxy(layer, shape, event.getX(), event.getY(), new PrimitiveDragProxy.Callback() {
+                    new PrimitiveDragProxy(layer, shape, event.getX(), event.getY(), 200, new PrimitiveDragProxy.Callback() {
                         @Override
                         public void onMove(final int x, final int y) {
                         }
