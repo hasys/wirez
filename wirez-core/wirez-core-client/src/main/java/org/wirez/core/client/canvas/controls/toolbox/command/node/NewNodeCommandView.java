@@ -11,14 +11,35 @@ import org.wirez.lienzo.palette.MiniPalette;
 import javax.enterprise.context.Dependent;
 
 @Dependent
-public class NewNodeCommandView implements NewNodeCommand.View{
+public class NewNodeCommandView implements NewNodeCommand.View {
 
     private NewNodeCommand presenter ;
     private final HoverMiniPalette miniPallete = new HoverMiniPalette();
+    private int padding = 10;
+    private int iconSize = 16;
+    private int timeout = 3000;
     
     @Override
     public NewNodeCommand.View init(final NewNodeCommand presenter) {
         this.presenter = presenter;
+        return this;
+    }
+
+    @Override
+    public NewNodeCommand.View setPadding(final int padding) {
+        this.padding = padding;
+        return this;
+    }
+
+    @Override
+    public NewNodeCommand.View setIconSize(final int iconSize) {
+        this.iconSize = iconSize;
+        return this;
+    }
+
+    @Override
+    public NewNodeCommand.View setTimeout(final int timeout) {
+        this.timeout = timeout;
         return this;
     }
 
@@ -53,11 +74,12 @@ public class NewNodeCommandView implements NewNodeCommand.View{
             shape.getWiresLayer().getLayer().add( miniPallete );
 
             miniPallete
-                    .setPadding(10)
-                    .setIconSize(16)
-                    .setX(x)
-                    .setY(y)
-                    .setCloseCallback( () -> removeMiniPalette() )
+                    .setPadding( padding )
+                    .setIconSize( iconSize )
+                    .setTimeout( timeout )
+                    .setX( x )
+                    .setY( y )
+                    .setCloseCallback(this::removeMiniPalette)
                     .setItemCallback( new MiniPalette.Callback() {
                         @Override
                         public void onItemHover(final int index,
@@ -95,10 +117,10 @@ public class NewNodeCommandView implements NewNodeCommand.View{
                         
                     } )
                     .build( items )
-                    .setAlpha(0)
-                    .animate(AnimationTweener.LINEAR, 
-                            AnimationProperties.toPropertyList(AnimationProperty.Properties.ALPHA(1)), 
-                            500, new AnimationCallback());
+                    .setAlpha( 0 )
+                    .animate( AnimationTweener.LINEAR, 
+                                AnimationProperties.toPropertyList(AnimationProperty.Properties.ALPHA(1)), 
+                                500, new AnimationCallback() );
         
         } else {
             

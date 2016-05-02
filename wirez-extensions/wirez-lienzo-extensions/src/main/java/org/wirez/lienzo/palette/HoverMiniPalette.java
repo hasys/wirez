@@ -44,6 +44,12 @@ public class HoverMiniPalette extends AbstractMiniPalette<HoverMiniPalette> {
         stopTimeout();
     }
 
+    @Override
+    protected void doItemOut(int index) {
+        super.doItemOut(index);
+        startTimeout();
+    }
+
     private void startTimeout() {
         
         if ( null == timer || !timer.isRunning() ) {

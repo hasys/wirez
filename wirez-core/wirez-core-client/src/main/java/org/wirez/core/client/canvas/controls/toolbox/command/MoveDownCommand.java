@@ -18,7 +18,7 @@ public class MoveDownCommand implements ToolboxCommand {
     @Inject
     public MoveDownCommand(CanvasCommandFactory commandFactory) {
         this.commandFactory = commandFactory;
-        this.icon = (Shape<?>) SVGUtils.createSVGIcon(SVGUtils.getMoveDown());;
+        this.icon = (Shape<?>) SVGUtils.createSVGIcon(SVGUtils.getMoveDownIcon());;
     }
 
     @Override

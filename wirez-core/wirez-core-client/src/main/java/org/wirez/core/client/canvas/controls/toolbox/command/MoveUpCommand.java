@@ -18,7 +18,7 @@ public class MoveUpCommand implements ToolboxCommand {
     @Inject
     public MoveUpCommand(CanvasCommandFactory commandFactory) {
         this.commandFactory = commandFactory;
-        this.icon = (Shape<?>) SVGUtils.createSVGIcon(SVGUtils.getMoveUp());;
+        this.icon = (Shape<?>) SVGUtils.createSVGIcon(SVGUtils.getMoveUpIcon());;
     }
 
     @Override

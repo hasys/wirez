@@ -1,6 +1,7 @@
 package org.wirez.core.client.canvas.controls.toolbox.command.node;
 
 import com.ait.lienzo.client.core.shape.Shape;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.logging.client.LogConfiguration;
 import org.wirez.core.api.graph.Edge;
 import org.wirez.core.api.graph.Element;
@@ -30,10 +31,19 @@ import java.util.logging.Logger;
 public class NewNodeCommand implements ToolboxCommand {
 
     private static Logger LOGGER = Logger.getLogger(NewNodeCommand.class.getName());
-
+    private static final int PADDING = 10;
+    private static final int ICON_SIZE = 10;
+    private static final int TIMEOUT = 3000;
+    
     public interface View {
 
         View init(NewNodeCommand presenter);
+        
+        View setPadding(int padding);
+        
+        View setIconSize(int iconSize);
+        
+        View setTimeout(int timeout);
 
         View showPalette(org.wirez.core.client.shape.Shape shape, int x, int y, ShapeGlyph... glyphs);
 
@@ -61,12 +71,15 @@ public class NewNodeCommand implements ToolboxCommand {
         this.shapeManager = shapeManager;
         this.glyphTooltip = glyphTooltip;
         this.view = view;
-        this.icon = SVGUtils.createSVGIcon(SVGUtils.getCreateConnection());
+        this.icon = SVGUtils.createSVGIcon(SVGUtils.getAddIcon());
     }
     
     @PostConstruct
     public void init() {
         view.init( this );
+        view.setPadding( PADDING );
+        view.setIconSize( ICON_SIZE );
+        view.setTimeout( TIMEOUT );
     }
 
     @Override
@@ -141,7 +154,9 @@ public class NewNodeCommand implements ToolboxCommand {
 
         final ShapeFactory<?, ?, ?> factory = factories[ index ];
         final ShapeGlyph glyph = factory.getGlyphFactory().build (100, 100 );
-        glyphTooltip.show( glyph, factory.getDescription(), x, y );
+        final double px = x + PADDING;
+        final double py = y - ( PADDING * ( index + 1 ) );
+        glyphTooltip.show( glyph, factory.getDescription(), px, py );
         
     }
 
@@ -154,8 +169,8 @@ public class NewNodeCommand implements ToolboxCommand {
     void onDragProxyMove(final int index,
                          final int x,
                          final int y) {
-        
-        // TODO
+
+        GWT.log("ProxyMove - [index=" + index + ", x=" + x + ", y=" + y + "]");
         
     }
     
@@ -163,7 +178,7 @@ public class NewNodeCommand implements ToolboxCommand {
                         final int x,
                         final int y) {
 
-        // TODO
+        GWT.log("ProxyEnd - [index=" + index + ", x=" + x + ", y=" + y + "]");
         
     }
     

@@ -64,7 +64,7 @@ public class NewConnectorCommand implements ToolboxCommand {
         this.commonLookups = commonLookups;
         this.callback = callback;
         this.view = view;
-        this.icon = SVGUtils.createSVGIcon(SVGUtils.getCreateConnection());
+        this.icon = SVGUtils.createSVGIcon(SVGUtils.getConnectorIcon());
     }
     
     @PostConstruct

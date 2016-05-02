@@ -26,7 +26,7 @@ public class RemoveToolboxCommand implements ToolboxCommand {
                                 final @Session CanvasCommandManager<AbstractCanvasHandler> canvasCommandManager) {
         this.commandFactory = commandFactory;
         this.canvasCommandManager = canvasCommandManager;
-        this.icon = SVGUtils.createSVGIcon(SVGUtils.getRemove());;
+        this.icon = SVGUtils.createSVGIcon(SVGUtils.getRemoveIcon());;
     }
 
     @Override

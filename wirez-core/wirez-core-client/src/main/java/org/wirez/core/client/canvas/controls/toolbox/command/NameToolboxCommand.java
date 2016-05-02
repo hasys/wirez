@@ -21,7 +21,7 @@ public class NameToolboxCommand implements ToolboxCommand, IsWidget {
     @Inject
     public NameToolboxCommand(PopupBox<AbstractCanvasHandler, Element> toolbox) {
         this.toolbox = toolbox;
-        this.icon = SVGUtils.createSVGIcon(SVGUtils.getTextEdit());
+        this.icon = SVGUtils.createSVGIcon(SVGUtils.getTextEditIcon());
     }
 
     @Override
