@@ -43,12 +43,20 @@ public class Decorator extends Group {
         this.callback = callback;
     }
 
-    private Timer timer = new Timer() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
+    private Timer timer = createTimer();
+
+    protected Timer createTimer() {
+        return new Timer() {
+            @Override
+            public void run() {
+                hide();
+            }
+        };
+    }
+
+    protected void resetTimer(Timer timer) {
+        this.timer = timer;
+    }
 
     public Decorator setPadding(final double padding) {
         this.padding = padding;
@@ -62,13 +70,7 @@ public class Decorator extends Group {
 
     public IPrimitive<?> build(final IPrimitive<?> item, final double width, final double height) {
 
-        decorator = new Rectangle(width + padding, height + padding)
-                .setCornerRadius(5)
-                .setFillColor(ColorName.BLACK)
-                .setFillAlpha(0.01)
-                .setStrokeWidth(2)
-                .setStrokeColor(ColorName.BLACK)
-                .setStrokeAlpha(0);
+        decorator = createRectangle(width, height);
 
         this.add(decorator);
         this.add(item);
@@ -76,10 +78,7 @@ public class Decorator extends Group {
         item.setY(padding / 2);
 
         decorator.addNodeMouseEnterHandler(nodeMouseEnterEvent -> show(nodeMouseEnterEvent.getMouseEvent().getClientX(), nodeMouseEnterEvent.getMouseEvent().getClientY()));
-
         decorator.addNodeMouseExitHandler(nodeMouseExitEvent -> hide());
-
-
         decorator.addNodeMouseMoveHandler(nodeMouseMoveEvent -> timer.cancel());
 
         item.setDraggable(false);
@@ -88,21 +87,35 @@ public class Decorator extends Group {
         return this;
     }
 
+    public Rectangle createRectangle(double width, double height) {
+        return new Rectangle(width + padding, height + padding)
+                .setCornerRadius(5)
+                .setFillColor(ColorName.BLACK)
+                .setFillAlpha(0.01)
+                .setStrokeWidth(2)
+                .setStrokeColor(ColorName.BLACK)
+                .setStrokeAlpha(0);
+    }
+
     public Decorator show(final double x, final double y) {
         if (!timer.isRunning()) {
             decorator.animate(AnimationTweener.LINEAR,
                     AnimationProperties.toPropertyList(AnimationProperty.Properties.STROKE_ALPHA(1)),
                     ANIMATION_DURATION,
-                    new AnimationCallback() {
-                        @Override
-                        public void onClose(IAnimation animation, IAnimationHandle handle) {
-                            super.onClose(animation, handle);
-                            fireShow(x, y);
-                        }
-                    });
+                    createShowAnimationCallback(x, y));
             timer.schedule(TIMER_DELAY);
         }
         return this;
+    }
+
+    protected AnimationCallback createShowAnimationCallback(final double x, final double y) {
+        return new AnimationCallback() {
+            @Override
+            public void onClose(IAnimation animation, IAnimationHandle handle) {
+                super.onClose(animation, handle);
+                fireShow(x, y);
+            }
+        };
     }
 
     public Decorator hide() {
@@ -110,15 +123,19 @@ public class Decorator extends Group {
             decorator.animate(AnimationTweener.LINEAR,
                     AnimationProperties.toPropertyList(AnimationProperty.Properties.STROKE_ALPHA(0)),
                     ANIMATION_DURATION,
-                    new AnimationCallback() {
-                        @Override
-                        public void onClose(IAnimation animation, IAnimationHandle handle) {
-                            super.onClose(animation, handle);
-                            fireHide();
-                        }
-                    });
+                    createHideAnimationCallback());
         }
         return this;
+    }
+
+    protected AnimationCallback createHideAnimationCallback() {
+        return new AnimationCallback() {
+            @Override
+            public void onClose(IAnimation animation, IAnimationHandle handle) {
+                super.onClose(animation, handle);
+                fireHide();
+            }
+        };
     }
 
     protected void fireShow(double x, double y) {

@@ -83,6 +83,12 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.ahome-it</groupId>
+      <artifactId>lienzo-tests</artifactId>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
 </project>

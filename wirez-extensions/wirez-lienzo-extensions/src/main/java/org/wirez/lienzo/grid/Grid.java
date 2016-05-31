@@ -1,9 +1,9 @@
 package org.wirez.lienzo.grid;
 
-import com.ait.lienzo.shared.core.types.Direction;
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import com.ait.lienzo.shared.core.types.Direction;
 
 public class Grid implements Iterable<Grid.Point> {
     private final int padding;
@@ -12,6 +12,10 @@ public class Grid implements Iterable<Grid.Point> {
     private final int cols;
 
     public Grid(int padding, int iconSize, int rows, int cols) {
+        if (padding < 0 || iconSize < 0 || rows < 1 || cols < 1) {
+            throw  new IllegalArgumentException("Not possible to instantiate grid.");
+        }
+
         this.padding = padding;
         this.iconSize = iconSize;
         this.rows = rows;
@@ -55,15 +59,37 @@ public class Grid implements Iterable<Grid.Point> {
                 x -= width;
                 y -= height;
                 break;
+            default:
+                throw new UnsupportedOperationException();
         }
 
         return new Point(x, y);
     }
 
     public Point findPosition(int row, int col) {
-        int x = padding + (col * (padding + iconSize));
-        int y = padding + (row * (padding + iconSize));
+        if (!isInRange(row, getRows())) {
+            throw new IllegalArgumentException(
+                    String.format("%s is incorrect row value. Value have to be from 0 to %s", row, getRows() - 1)
+            );
+        }
+
+        if (!isInRange(col, getCols())) {
+            throw new IllegalArgumentException(
+                    String.format("%s is incorrect col value. Value have to be from 0 to %s", col, getCols() - 1)
+            );
+        }
+
+        int x = calculateDistance(col);
+        int y = calculateDistance(row);
         return new Point(x, y);
+    }
+
+    private int calculateDistance(int position) {
+        return padding + (position * (padding + iconSize));
+    }
+
+    private boolean isInRange(int value, int max) {
+        return value >= 0 && value < max;
     }
 
     @Override
@@ -80,15 +106,15 @@ public class Grid implements Iterable<Grid.Point> {
     }
 
     public int size() {
-        return rows * cols;
+        return getRows() * getCols();
     }
 
     public int getWidth() {
-        return padding + (cols * (iconSize + padding));
+        return calculateDistance(getCols());
     }
 
     public int getHeight() {
-        return padding + (rows * (iconSize + padding));
+        return calculateDistance(getRows());
     }
 
     public static class Point {
@@ -107,11 +133,9 @@ public class Grid implements Iterable<Grid.Point> {
         public int getY() {
             return y;
         }
-
-
     }
 
-    private class GridIterator implements Iterator<Point> {
+    protected static class GridIterator implements Iterator<Point> {
         private final Grid grid;
         private int currentRow = 0;
         private int currentColumn = 0;

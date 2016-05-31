@@ -34,7 +34,8 @@
     <version.javax.el.api>2.2</version.javax.el.api>
     <!-- TODO: Remove when moving to latest parent IP BOM. -->
     <version.com.google.gwt.gwtmockito>1.1.6</version.com.google.gwt.gwtmockito>
-    
+    <version.com.ahome-it.lienzo-tests>1.0.0-SNAPSHOT</version.com.ahome-it.lienzo-tests>
+
   </properties>
 
   <dependencyManagement>
@@ -196,6 +197,13 @@
         <groupId>javax.el</groupId>
         <artifactId>el-api</artifactId>
         <version>${version.javax.el.api}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.ahome-it</groupId>
+        <artifactId>lienzo-tests</artifactId>
+        <version>${version.com.ahome-it.lienzo-tests}</version>
+        <scope>test</scope>
       </dependency>
 
     </dependencies>
